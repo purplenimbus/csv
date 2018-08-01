@@ -19,9 +19,10 @@ class ProcessCsv implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($data)
+    public function __construct($data,$csv)
     {
         $this->data = $data;
+        $this->csv = $csv;
     }
 
     /**
@@ -34,6 +35,7 @@ class ProcessCsv implements ShouldQueue
         try{
 			//get csv
 			var_dump($this->data);
+			var_dump($this->csv);
 			//$csv = str_getcsv();
 			//var_dump($csv);
 			//loop through data
