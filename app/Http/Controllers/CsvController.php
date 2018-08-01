@@ -22,6 +22,6 @@ class CsvController extends Controller
 		
 		ProcessCsv::dispatch($csv_data,$csv);
 		
-		return response()->json(['id' => $csv->id,'status' => 'processing'],200);
+		return response()->json(['id' => $csv->uuid,'status' => 'processing'],200);
 	}
 }

@@ -60,13 +60,13 @@
 					complete: function (e) {
 						
 						self.loading = false;
-						//var response = JSON.parse(e.response);
+						var response = JSON.parse(e.response);
 						
 						console.log('complete',e);
 						
-						//UIkit.notification("Processing CSV id "+response.id, {status: 'info'});
+						UIkit.notification("Processing CSV id "+response.id, {status: 'info'});
 						
-						//self.$emit('processing', response);
+						self.$emit('processing', response);
 					}
 
 				});

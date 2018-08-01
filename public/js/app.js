@@ -43643,13 +43643,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				complete: function complete(e) {
 
 					self.loading = false;
-					//var response = JSON.parse(e.response);
+					var response = JSON.parse(e.response);
 
 					console.log('complete', e);
 
-					//UIkit.notification("Processing CSV id "+response.id, {status: 'info'});
+					UIkit.notification("Processing CSV id " + response.id, { status: 'info' });
 
-					//self.$emit('processing', response);
+					self.$emit('processing', response);
 				}
 
 			});

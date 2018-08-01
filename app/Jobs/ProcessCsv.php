@@ -35,7 +35,7 @@ class ProcessCsv implements ShouldQueue
     {
         try{
 			//get csv
-			var_dump($this->csv_string);
+			//var_dump($this->csv_string);
 			var_dump($this->model->uuid);
 			//$csv = str_getcsv();
 			//var_dump($csv);
