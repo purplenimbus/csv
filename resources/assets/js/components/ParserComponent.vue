@@ -38,7 +38,7 @@
     export default {
 		data:{
 			csv:'',
-			result:false
+			result:''
 		},
 		methods : {
 			submit(){
