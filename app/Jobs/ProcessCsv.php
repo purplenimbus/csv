@@ -13,16 +13,17 @@ use App\Csv;
 class ProcessCsv implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-	public $data;
+	public $csv_string;
+	public $model;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($data,$csv)
+    public function __construct($csv_string,$model)
     {
-        $this->data = $data;
-        $this->csv = $csv;
+        $this->csv_string = $csv_string;
+        $this->model = $model;
     }
 
     /**
@@ -34,8 +35,8 @@ class ProcessCsv implements ShouldQueue
     {
         try{
 			//get csv
-			var_dump($this->data);
-			var_dump($this->csv);
+			var_dump($this->csv_string);
+			var_dump($this->model->uuid);
 			//$csv = str_getcsv();
 			//var_dump($csv);
 			//loop through data

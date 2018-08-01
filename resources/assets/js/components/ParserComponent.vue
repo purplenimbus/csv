@@ -7,7 +7,7 @@
 					<fieldset class="uk-fieldset uk-width-1-1">
 
 						<div class="uk-margin">
-							<upload-component v-on:csv-ready="init"></upload-component>
+							<upload-component v-on:csv-ready="init" v-on:processing="init"></upload-component>
 						</div>
 
 					</fieldset>
@@ -31,7 +31,8 @@
 		data:function(){
 			return {
 				result:'',
-				loading: false
+				loading: false,
+				files : []
 			}
 		},
 		methods : {

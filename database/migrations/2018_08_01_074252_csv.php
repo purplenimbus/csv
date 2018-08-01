@@ -16,8 +16,8 @@ class Csv extends Migration
         Schema::create('csv', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uuid');
-            $table->string('path');
-            $table->json('result');
+            $table->string('path')->nullable();
+            $table->json('result')->nullable();
 			$table->boolean('processed')->default(false);
             $table->timestamps();
         });

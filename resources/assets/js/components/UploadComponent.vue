@@ -5,7 +5,7 @@
 			<span uk-icon="icon: cloud-upload"></span>
 			<span class="uk-text-middle">Drop CSV file here or</span>
 			<div uk-form-custom>
-				<input type="file">
+				<input type="file" name="csv">
 				<span class="uk-link">select one</span>
 			</div>
 		</span>
@@ -43,16 +43,11 @@
 					},
 					beforeAll: function () {
 						
-						//var file = arguments[1][0];
-																		
-						//self.files.push(file); 
-						
 						self.loading = true;
 										
-						//self.parse(self.files[0]);		
 					},
 					progress: function (e) {
-						console.log('progress', arguments,e.total,e.loaded);
+						console.log('progress',e.total,e.loaded);
 						
 						self.progress.total = e.total;
 						self.progress.loaded = e.loaded;
@@ -61,6 +56,17 @@
 						console.log('error', arguments);
 						self.loading = false;
 						UIkit.notification("Error uploading CSV", {status: 'danger'});
+					},
+					complete: function (e) {
+						
+						self.loading = false;
+						//var response = JSON.parse(e.response);
+						
+						console.log('complete',e);
+						
+						//UIkit.notification("Processing CSV id "+response.id, {status: 'info'});
+						
+						//self.$emit('processing', response);
 					}
 
 				});

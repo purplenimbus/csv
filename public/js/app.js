@@ -43430,7 +43430,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	data: function data() {
 		return {
 			result: '',
-			loading: false
+			loading: false,
+			files: []
 		};
 	},
 	methods: {
@@ -43473,7 +43474,11 @@ var render = function() {
                 _c(
                   "div",
                   { staticClass: "uk-margin" },
-                  [_c("upload-component", { on: { "csv-ready": _vm.init } })],
+                  [
+                    _c("upload-component", {
+                      on: { "csv-ready": _vm.init, processing: _vm.init }
+                    })
+                  ],
                   1
                 )
               ])
@@ -43622,16 +43627,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				},
 				beforeAll: function beforeAll() {
 
-					//var file = arguments[1][0];
-
-					//self.files.push(file); 
-
 					self.loading = true;
-
-					//self.parse(self.files[0]);		
 				},
 				progress: function progress(e) {
-					console.log('progress', arguments, e.total, e.loaded);
+					console.log('progress', e.total, e.loaded);
 
 					self.progress.total = e.total;
 					self.progress.loaded = e.loaded;
@@ -43640,6 +43639,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					console.log('error', arguments);
 					self.loading = false;
 					UIkit.notification("Error uploading CSV", { status: 'danger' });
+				},
+				complete: function complete(e) {
+
+					self.loading = false;
+					//var response = JSON.parse(e.response);
+
+					console.log('complete', e);
+
+					//UIkit.notification("Processing CSV id "+response.id, {status: 'info'});
+
+					//self.$emit('processing', response);
 				}
 
 			});
@@ -43708,7 +43718,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { attrs: { "uk-form-custom": "" } }, [
-      _c("input", { attrs: { type: "file" } }),
+      _c("input", { attrs: { type: "file", name: "csv" } }),
       _vm._v(" "),
       _c("span", { staticClass: "uk-link" }, [_vm._v("select one")])
     ])

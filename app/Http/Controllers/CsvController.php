@@ -14,8 +14,14 @@ class CsvController extends Controller
 		
 		$csv->save();
 		
-		ProcessCsv::dispatch($request->file('csv'),$csv);
+		$path = $request->file('files')[0]->getPathname();
 		
-		return response()->json(['process id' => $csv->id],200);
+		$file = fopen($path, "r");
+		
+		$csv_data = fread($file,filesize($path));
+		
+		ProcessCsv::dispatch($csv_data,$csv);
+		
+		return response()->json(['id' => $csv->id,'status' => 'processing'],200);
 	}
 }
