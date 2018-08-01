@@ -31,7 +31,7 @@ class CsvProcessed extends Notification implements ShouldBroadcast
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database','broadcast'];
     }
 	
     /**

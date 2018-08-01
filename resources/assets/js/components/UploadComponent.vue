@@ -9,7 +9,7 @@
 				<span class="uk-link">select one</span>
 			</div>
 		</span>
-		<ul class="uk-list uk-list-divider" v-if="files && !loading">
+		<ul class="uk-list uk-list-divider" v-if="files">
 			<li v-for="file in files">
 				{{ file.name }}
 			</li>
@@ -33,9 +33,13 @@
 		
 				self.Uikit = UIkit.upload('.js-upload', {
 
-					url: '',
+					url: '/csv/process',
 					multiple: false,
-
+					params : {
+						headers: {
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+						}
+					},
 					beforeSend: function () {
 						console.log('beforeSend file', arguments ,self );
 					},
@@ -54,6 +58,11 @@
 						
 						self.progress.total = e.total;
 						self.progress.loaded = e.loaded;
+					},
+					error: function () {
+						console.log('error', arguments);
+						self.loading = false;
+						UIkit.notification("Error uploading CSV", {status: 'danger'});
 					}
 
 				});

@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('csv','CsvController@process');
+Route::post('csv/process','CsvController@process');

@@ -43612,9 +43612,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			self.Uikit = UIkit.upload('.js-upload', {
 
-				url: '',
+				url: '/csv/process',
 				multiple: false,
-
+				params: {
+					headers: {
+						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+					}
+				},
 				beforeSend: function beforeSend() {
 					console.log('beforeSend file', arguments, self);
 				},
@@ -43633,6 +43637,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 					self.progress.total = e.total;
 					self.progress.loaded = e.loaded;
+				},
+				error: function error() {
+					console.log('error', arguments);
+					self.loading = false;
+					UIkit.notification("Error uploading CSV", { status: 'danger' });
 				}
 
 			});
@@ -43684,7 +43693,7 @@ var render = function() {
         ])
       : _vm._e(),
     _vm._v(" "),
-    _vm.files && !_vm.loading
+    _vm.files
       ? _c(
           "ul",
           { staticClass: "uk-list uk-list-divider" },
