@@ -1,6 +1,7 @@
 <template>
 	<div class="js-upload uk-placeholder uk-text-center">
-		<span v-if="!files.length">
+		<div uk-spinner v-if="loading"></div>
+		<span v-if="!files.length && !loading">
 			<span uk-icon="icon: cloud-upload"></span>
 			<span class="uk-text-middle">Drop CSV file here or</span>
 			<div uk-form-custom>
@@ -8,7 +9,7 @@
 				<span class="uk-link">select one</span>
 			</div>
 		</span>
-		<ul class="uk-list uk-list-divider" v-if="files">
+		<ul class="uk-list uk-list-divider" v-if="files && !loading">
 			<li v-for="file in files">
 				{{ file.name }}
 			</li>
@@ -21,7 +22,8 @@
 		data:function(){
 			return {
 				files:[],
-				el : {}
+				el : {},
+				loading : false
 			}
 		},
 		methods : {
@@ -34,57 +36,38 @@
 					multiple: false,
 
 					beforeSend: function () {
-								
 						console.log('beforeSend file', arguments );
 					},
 					beforeAll: function () {
 						
-						//validate for csv here ?
-						
 						var file = arguments[1][0];
-												
+																		
 						self.files.push(file); 
 						
-						console.log('beforeAll', self);
-						
-						//self.setFiles(self.files);
-						
-						//$( "body" ).trigger("dropped",[self.files[0]]);
-								
-					},
-					load: function () {
-						console.log('load', arguments);
-					},
-					error: function () {
-						console.log('error', arguments);
-					},
-					complete: function () {
-						console.log('complete', arguments);
-					},
-
-					loadStart: function (e) {
-						console.log('loadStart', arguments);
-					},
-
-					progress: function (e) {
-						console.log('progress', arguments);
-					},
-
-					loadEnd: function (e) {
-						console.log('loadEnd', arguments);
-					},
-
-					completeAll: function () {
-						console.log('completeAll', arguments);
+						self.loading = true;
+										
+						self.parse(self.files[0]);		
 					}
 
 				});
 				
 				self.el = self.Uikit.$el;
+			},
+			parse(file){
+				console.log('Parser.load',file);
+		
+				var reader = new FileReader();
+				
+				reader.readAsText(file);
+				
+				// attach event, that will be fired, when read is end
+				reader.addEventListener("loaded", function() {
+					self.loading = false;
+					console.log('reader loaded',reader);
+				});
 			}
 		},
         mounted() {
-            console.log('Upload Component mounted.',this);
 			this.init();
         }
     }

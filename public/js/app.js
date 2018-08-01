@@ -43610,12 +43610,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
 			files: [],
-			el: {}
+			el: {},
+			loading: false
 		};
 	},
 	methods: {
@@ -43628,56 +43630,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				multiple: false,
 
 				beforeSend: function beforeSend() {
-
 					console.log('beforeSend file', arguments);
 				},
 				beforeAll: function beforeAll() {
-
-					//validate for csv here ?
 
 					var file = arguments[1][0];
 
 					self.files.push(file);
 
-					console.log('beforeAll', self);
+					self.loading = true;
 
-					//self.setFiles(self.files);
-
-					//$( "body" ).trigger("dropped",[self.files[0]]);
-				},
-				load: function load() {
-					console.log('load', arguments);
-				},
-				error: function error() {
-					console.log('error', arguments);
-				},
-				complete: function complete() {
-					console.log('complete', arguments);
-				},
-
-				loadStart: function loadStart(e) {
-					console.log('loadStart', arguments);
-				},
-
-				progress: function progress(e) {
-					console.log('progress', arguments);
-				},
-
-				loadEnd: function loadEnd(e) {
-					console.log('loadEnd', arguments);
-				},
-
-				completeAll: function completeAll() {
-					console.log('completeAll', arguments);
+					self.parse(self.files[0]);
 				}
 
 			});
 
 			self.el = self.Uikit.$el;
+		},
+		parse: function parse(file) {
+			console.log('Parser.load', file);
+
+			var reader = new FileReader();
+
+			reader.readAsText(file);
+
+			// attach event, that will be fired, when read is end
+			reader.addEventListener("loaded", function () {
+				self.loading = false;
+				console.log('reader loaded', reader);
+			});
 		}
 	},
 	mounted: function mounted() {
-		console.log('Upload Component mounted.', this);
 		this.init();
 	}
 });
@@ -43691,7 +43675,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "js-upload uk-placeholder uk-text-center" }, [
-    !_vm.files.length
+    _vm.loading ? _c("div", { attrs: { "uk-spinner": "" } }) : _vm._e(),
+    _vm._v(" "),
+    !_vm.files.length && !_vm.loading
       ? _c("span", [
           _c("span", { attrs: { "uk-icon": "icon: cloud-upload" } }),
           _vm._v(" "),
@@ -43703,7 +43689,7 @@ var render = function() {
         ])
       : _vm._e(),
     _vm._v(" "),
-    _vm.files
+    _vm.files && !_vm.loading
       ? _c(
           "ul",
           { staticClass: "uk-list uk-list-divider" },
