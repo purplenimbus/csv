@@ -23,7 +23,8 @@
 			return {
 				files:[],
 				el : {},
-				loading : false
+				loading : false,
+				progress : {}
 			}
 		},
 		methods : {
@@ -36,17 +37,23 @@
 					multiple: false,
 
 					beforeSend: function () {
-						console.log('beforeSend file', arguments );
+						console.log('beforeSend file', arguments ,self );
 					},
 					beforeAll: function () {
 						
-						var file = arguments[1][0];
+						//var file = arguments[1][0];
 																		
-						self.files.push(file); 
+						//self.files.push(file); 
 						
 						self.loading = true;
 										
-						self.parse(self.files[0]);		
+						//self.parse(self.files[0]);		
+					},
+					progress: function (e) {
+						console.log('progress', arguments,e.total,e.loaded);
+						
+						self.progress.total = e.total;
+						self.progress.loaded = e.loaded;
 					}
 
 				});
