@@ -43603,11 +43603,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
-			payload: [],
+			files: [],
 			el: {}
 		};
 	},
@@ -43628,13 +43635,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 					//validate for csv here ?
 
-					self.files.push(arguments[1][0]);
+					var file = arguments[1][0];
 
-					console.log('beforeAll', arguments, self.files);
+					self.files.push(file);
 
-					self.setFiles(self.files);
+					console.log('beforeAll', self);
 
-					$("body").trigger("dropped", [self.files[0]]);
+					//self.setFiles(self.files);
+
+					//$( "body" ).trigger("dropped",[self.files[0]]);
 				},
 				load: function load() {
 					console.log('load', arguments);
@@ -43648,34 +43657,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 				loadStart: function loadStart(e) {
 					console.log('loadStart', arguments);
-
-					self.bar.removeAttribute('hidden');
-					self.bar.max = e.total;
-					self.bar.value = e.loaded;
 				},
 
 				progress: function progress(e) {
 					console.log('progress', arguments);
-
-					self.bar.max = e.total;
-					self.bar.value = e.loaded;
 				},
 
 				loadEnd: function loadEnd(e) {
 					console.log('loadEnd', arguments);
-
-					self.bar.max = e.total;
-					self.bar.value = e.loaded;
 				},
 
 				completeAll: function completeAll() {
 					console.log('completeAll', arguments);
-
-					setTimeout(function () {
-						self.bar.setAttribute('hidden', 'hidden');
-					}, 1000);
-
-					alert('Upload Completed');
 				}
 
 			});
@@ -43697,30 +43690,40 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "js-upload uk-placeholder uk-text-center" }, [
+    !_vm.files.length
+      ? _c("span", [
+          _c("span", { attrs: { "uk-icon": "icon: cloud-upload" } }),
+          _vm._v(" "),
+          _c("span", { staticClass: "uk-text-middle" }, [
+            _vm._v("Drop CSV file here or")
+          ]),
+          _vm._v(" "),
+          _vm._m(0)
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.files
+      ? _c(
+          "ul",
+          { staticClass: "uk-list uk-list-divider" },
+          _vm._l(_vm.files, function(file) {
+            return _c("li", [_vm._v("\n\t\t\t" + _vm._s(file.name) + "\n\t\t")])
+          })
+        )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "js-upload uk-placeholder uk-text-center" },
-      [
-        _c("span", { attrs: { "uk-icon": "icon: cloud-upload" } }),
-        _vm._v(" "),
-        _c("span", { staticClass: "uk-text-middle" }, [
-          _vm._v("Drop CSV file here or")
-        ]),
-        _vm._v(" "),
-        _c("div", { attrs: { "uk-form-custom": "" } }, [
-          _c("input", { attrs: { type: "file", multiple: "" } }),
-          _vm._v(" "),
-          _c("span", { staticClass: "uk-link" }, [_vm._v("select one")])
-        ])
-      ]
-    )
+    return _c("div", { attrs: { "uk-form-custom": "" } }, [
+      _c("input", { attrs: { type: "file" } }),
+      _vm._v(" "),
+      _c("span", { staticClass: "uk-link" }, [_vm._v("select one")])
+    ])
   }
 ]
 render._withStripped = true

@@ -1,11 +1,18 @@
 <template>
 	<div class="js-upload uk-placeholder uk-text-center">
-		<span uk-icon="icon: cloud-upload"></span>
-		<span class="uk-text-middle">Drop CSV file here or</span>
-		<div uk-form-custom>
-			<input type="file" multiple>
-			<span class="uk-link">select one</span>
-		</div>
+		<span v-if="!files.length">
+			<span uk-icon="icon: cloud-upload"></span>
+			<span class="uk-text-middle">Drop CSV file here or</span>
+			<div uk-form-custom>
+				<input type="file">
+				<span class="uk-link">select one</span>
+			</div>
+		</span>
+		<ul class="uk-list uk-list-divider" v-if="files">
+			<li v-for="file in files">
+				{{ file.name }}
+			</li>
+		</ul>
 	</div>
 </template>
 
@@ -13,7 +20,7 @@
     export default {
 		data:function(){
 			return {
-				payload:[],
+				files:[],
 				el : {}
 			}
 		},
@@ -34,13 +41,15 @@
 						
 						//validate for csv here ?
 						
-						self.files.push(arguments[1][0]); 
+						var file = arguments[1][0];
+												
+						self.files.push(file); 
 						
-						console.log('beforeAll', arguments , self.files);
+						console.log('beforeAll', self);
 						
-						self.setFiles(self.files);
+						//self.setFiles(self.files);
 						
-						$( "body" ).trigger("dropped",[self.files[0]]);
+						//$( "body" ).trigger("dropped",[self.files[0]]);
 								
 					},
 					load: function () {
@@ -55,34 +64,18 @@
 
 					loadStart: function (e) {
 						console.log('loadStart', arguments);
-
-						self.bar.removeAttribute('hidden');
-						self.bar.max = e.total;
-						self.bar.value = e.loaded;
 					},
 
 					progress: function (e) {
 						console.log('progress', arguments);
-
-						self.bar.max = e.total;
-						self.bar.value = e.loaded;
 					},
 
 					loadEnd: function (e) {
 						console.log('loadEnd', arguments);
-
-						self.bar.max = e.total;
-						self.bar.value = e.loaded;
 					},
 
 					completeAll: function () {
 						console.log('completeAll', arguments);
-
-						setTimeout(function () {
-							self.bar.setAttribute('hidden', 'hidden');
-						}, 1000);
-
-						alert('Upload Completed');
 					}
 
 				});
