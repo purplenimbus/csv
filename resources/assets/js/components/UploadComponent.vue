@@ -35,13 +35,11 @@
 
 					url: '/csv/process',
 					multiple: false,
-					params : {
-						headers: {
+					beforeSend: function (e) {
+						console.log('beforeSend file', arguments ,e );
+						e.headers = {
 							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-						}
-					},
-					beforeSend: function () {
-						console.log('beforeSend file', arguments ,self );
+						};
 					},
 					beforeAll: function () {
 						

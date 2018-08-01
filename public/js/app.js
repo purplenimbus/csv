@@ -43614,13 +43614,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 				url: '/csv/process',
 				multiple: false,
-				params: {
-					headers: {
+				beforeSend: function beforeSend(e) {
+					console.log('beforeSend file', arguments, e);
+					e.headers = {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-					}
-				},
-				beforeSend: function beforeSend() {
-					console.log('beforeSend file', arguments, self);
+					};
 				},
 				beforeAll: function beforeAll() {
 
