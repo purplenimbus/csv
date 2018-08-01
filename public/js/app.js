@@ -13915,7 +13915,7 @@ window.Popper = __webpack_require__(3).default;
 try {
   window.$ = window.jQuery = __webpack_require__(4);
 
-  __webpack_require__(51);
+  window.UIkit = __webpack_require__(51);
 } catch (e) {}
 
 /**
@@ -43428,9 +43428,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	data: {
-		csv: '',
-		result: ''
+	data: function data() {
+		return {
+			csv: '',
+			result: ''
+		};
 	},
 	methods: {
 		submit: function submit() {
@@ -43438,7 +43440,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		}
 	},
 	mounted: function mounted() {
-		console.log('Component mounted.');
+		console.log('Parser Component mounted.');
 	}
 });
 
@@ -43473,91 +43475,61 @@ var render = function() {
                   1
                 ),
                 _vm._v(" "),
-                _c("div", { staticClass: "uk-margin" }, [
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.csv,
-                        expression: "csv"
-                      }
-                    ],
-                    staticClass: "uk-textarea",
-                    attrs: {
-                      rows: "5",
-                      placeholder: "",
-                      name: "csv",
-                      id: "csv"
-                    },
-                    domProps: { value: _vm.csv },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.csv = $event.target.value
-                      }
-                    }
-                  })
-                ]),
+                _vm._m(0),
                 _vm._v(" "),
                 _c("div", { staticClass: "uk-margin" }, [
-                  _c("input", {
-                    staticClass:
-                      "uk-button uk-button-primary uk-button-large uk-width-1-1",
-                    attrs: { type: "submit", value: "Submit" },
-                    on: {
-                      click: function($event) {
-                        _vm.submit()
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "uk-button uk-button-primary uk-button-large uk-width-1-1",
+                      on: {
+                        click: function($event) {
+                          _vm.submit()
+                        }
                       }
-                    }
-                  })
+                    },
+                    [_vm._v("submit")]
+                  )
                 ])
               ])
             ]
           ),
           _vm._v(" "),
           _vm.result
-            ? _c("div", { attrs: { "uk-grid": "" } }, [
-                _c("fieldset", { staticClass: "uk-fieldset uk-width-1-1" }, [
-                  _c("div", { staticClass: "uk-margin" }, [
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.result,
-                          expression: "result"
-                        }
-                      ],
-                      staticClass: "uk-textarea",
-                      attrs: {
-                        rows: "5",
-                        placeholder: "",
-                        name: "result",
-                        id: "result"
-                      },
-                      domProps: { value: _vm.result },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.result = $event.target.value
-                        }
-                      }
-                    })
-                  ])
-                ])
-              ])
+            ? _c("div", { attrs: { "uk-grid": "" } }, [_vm._m(1)])
             : _vm._e()
         ])
       ])
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "uk-margin" }, [
+      _c("textarea", {
+        staticClass: "uk-textarea",
+        attrs: { rows: "5", id: "csv" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("fieldset", { staticClass: "uk-fieldset uk-width-1-1" }, [
+      _c("div", { staticClass: "uk-margin" }, [
+        _c("textarea", {
+          staticClass: "uk-textarea",
+          attrs: { rows: "5", placeholder: "", id: "result" }
+        })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -43633,9 +43605,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	data: {
-		payload: [],
-		el: {}
+	data: function data() {
+		return {
+			payload: [],
+			el: {}
+		};
 	},
 	methods: {
 		init: function init() {
@@ -43710,7 +43684,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		}
 	},
 	mounted: function mounted() {
-		console.log('Component mounted.');
+		console.log('Upload Component mounted.', this);
+		this.init();
 	}
 });
 

@@ -11,9 +11,11 @@
 
 <script>
     export default {
-		data:{
-			payload:[],
-			el : {}
+		data:function(){
+			return {
+				payload:[],
+				el : {}
+			}
 		},
 		methods : {
 			init(){
@@ -89,7 +91,8 @@
 			}
 		},
         mounted() {
-            console.log('Component mounted.')
+            console.log('Upload Component mounted.',this);
+			this.init();
         }
     }
 </script>

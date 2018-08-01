@@ -11,11 +11,11 @@
 						</div>
 
 						<div class="uk-margin">
-							<textarea class="uk-textarea" rows="5" placeholder="" name="csv" id="csv" v-model="csv"></textarea>
+							<textarea class="uk-textarea" rows="5" id="csv"></textarea>
 						</div>
 
 						<div class="uk-margin">
-							<input class="uk-button uk-button-primary uk-button-large uk-width-1-1" type="submit" value="Submit" @click="submit()">
+							<button class="uk-button uk-button-primary uk-button-large uk-width-1-1" @click="submit()">submit</button>
 						</div>
 
 					</fieldset>
@@ -24,7 +24,7 @@
 					<fieldset class="uk-fieldset uk-width-1-1">
 
 						<div class="uk-margin">
-							<textarea class="uk-textarea" rows="5" placeholder="" name="result" id="result" v-model="result"></textarea>
+							<textarea class="uk-textarea" rows="5" placeholder="" id="result"></textarea>
 						</div>
 
 					</fieldset>
@@ -36,9 +36,11 @@
 
 <script>
     export default {
-		data:{
-			csv:'',
-			result:''
+		data:function(){
+			return {
+				csv:'',
+				result:''
+			}
 		},
 		methods : {
 			submit(){
@@ -46,7 +48,7 @@
 			}
 		},
         mounted() {
-            console.log('Component mounted.');
+            console.log('Parser Component mounted.');
         }
     }
 </script>
