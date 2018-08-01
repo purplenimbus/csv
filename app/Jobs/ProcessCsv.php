@@ -34,6 +34,8 @@ class ProcessCsv implements ShouldQueue
         try{
 			//get csv
 			var_dump($this->data);
+			//$csv = str_getcsv();
+			//var_dump($csv);
 			//loop through data
 			
 		}catch(Exception $e){
