@@ -7,15 +7,7 @@
 					<fieldset class="uk-fieldset uk-width-1-1">
 
 						<div class="uk-margin">
-							<upload-component></upload-component>
-						</div>
-
-						<div class="uk-margin">
-							<textarea class="uk-textarea" rows="5" id="csv"></textarea>
-						</div>
-
-						<div class="uk-margin">
-							<button class="uk-button uk-button-primary uk-button-large uk-width-1-1" @click="submit()">submit</button>
+							<upload-component v-on:csv-ready="init"></upload-component>
 						</div>
 
 					</fieldset>
@@ -24,7 +16,7 @@
 					<fieldset class="uk-fieldset uk-width-1-1">
 
 						<div class="uk-margin">
-							<textarea class="uk-textarea" rows="5" placeholder="" id="result"></textarea>
+							<textarea class="uk-textarea" rows="5" placeholder="" id="result" v-model="result"></textarea>
 						</div>
 
 					</fieldset>
@@ -38,13 +30,16 @@
     export default {
 		data:function(){
 			return {
-				csv:'',
-				result:''
+				result:'',
+				loading: false
 			}
 		},
 		methods : {
-			submit(){
-				console.log('submit form');
+			init(data){
+				var self = this;
+				self.csv = data;
+				
+				console.log('Parser init form',self.csv);
 			}
 		},
         mounted() {

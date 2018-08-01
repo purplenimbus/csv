@@ -54,6 +54,8 @@
 				self.el = self.Uikit.$el;
 			},
 			parse(file){
+				var self = this;
+				
 				console.log('Parser.load',file);
 		
 				var reader = new FileReader();
@@ -61,9 +63,10 @@
 				reader.readAsText(file);
 				
 				// attach event, that will be fired, when read is end
-				reader.addEventListener("loaded", function() {
+				reader.addEventListener("load", function() {
 					self.loading = false;
 					console.log('reader loaded',reader);
+					self.$emit('csv-ready', reader.result);
 				});
 			}
 		},

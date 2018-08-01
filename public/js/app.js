@@ -43418,25 +43418,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
-			csv: '',
-			result: ''
+			result: '',
+			loading: false
 		};
 	},
 	methods: {
-		submit: function submit() {
-			console.log('submit form');
+		init: function init(data) {
+			var self = this;
+			self.csv = data;
+
+			console.log('Parser init form', self.csv);
 		}
 	},
 	mounted: function mounted() {
@@ -43471,65 +43466,48 @@ var render = function() {
                 _c(
                   "div",
                   { staticClass: "uk-margin" },
-                  [_c("upload-component")],
+                  [_c("upload-component", { on: { "csv-ready": _vm.init } })],
                   1
-                ),
-                _vm._v(" "),
-                _vm._m(0),
-                _vm._v(" "),
-                _c("div", { staticClass: "uk-margin" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass:
-                        "uk-button uk-button-primary uk-button-large uk-width-1-1",
-                      on: {
-                        click: function($event) {
-                          _vm.submit()
-                        }
-                      }
-                    },
-                    [_vm._v("submit")]
-                  )
-                ])
+                )
               ])
             ]
           ),
           _vm._v(" "),
           _vm.result
-            ? _c("div", { attrs: { "uk-grid": "" } }, [_vm._m(1)])
+            ? _c("div", { attrs: { "uk-grid": "" } }, [
+                _c("fieldset", { staticClass: "uk-fieldset uk-width-1-1" }, [
+                  _c("div", { staticClass: "uk-margin" }, [
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.result,
+                          expression: "result"
+                        }
+                      ],
+                      staticClass: "uk-textarea",
+                      attrs: { rows: "5", placeholder: "", id: "result" },
+                      domProps: { value: _vm.result },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.result = $event.target.value
+                        }
+                      }
+                    })
+                  ])
+                ])
+              ])
             : _vm._e()
         ])
       ])
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "uk-margin" }, [
-      _c("textarea", {
-        staticClass: "uk-textarea",
-        attrs: { rows: "5", id: "csv" }
-      })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("fieldset", { staticClass: "uk-fieldset uk-width-1-1" }, [
-      _c("div", { staticClass: "uk-margin" }, [
-        _c("textarea", {
-          staticClass: "uk-textarea",
-          attrs: { rows: "5", placeholder: "", id: "result" }
-        })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -43648,6 +43626,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			self.el = self.Uikit.$el;
 		},
 		parse: function parse(file) {
+			var self = this;
+
 			console.log('Parser.load', file);
 
 			var reader = new FileReader();
@@ -43655,9 +43635,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			reader.readAsText(file);
 
 			// attach event, that will be fired, when read is end
-			reader.addEventListener("loaded", function () {
+			reader.addEventListener("load", function () {
 				self.loading = false;
 				console.log('reader loaded', reader);
+				self.$emit('csv-ready', reader.result);
 			});
 		}
 	},
