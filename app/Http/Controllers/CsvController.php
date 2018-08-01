@@ -11,5 +11,7 @@ class CsvController extends Controller
 		//validate?
 		
 		ProcessCsv::dispatch($request->file('csv'));
+		
+		return response()->json(['success' =>'']);
 	}
 }
