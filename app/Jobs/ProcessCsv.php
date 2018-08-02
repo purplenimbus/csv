@@ -63,29 +63,13 @@ class ProcessCsv implements ShouldQueue
 																		
 				$years = array_merge($modelYear,explode(',',$vehicleModel->years));
 				
-				//echo "Model Years"."\r\n";
-				
-				//var_dump($modelYear);
-				
-				//echo "Years"."\r\n";
-				
-				//var_dump($years);
-				
 				$yearsFiltered = array_unique($years);
-				
-				//echo "Years (Duplicates Removed)"."\r\n";
-				
-				//var_dump($yearsFiltered);
 				
 				$vehicleModel->years = implode(',',array_filter($yearsFiltered));
 				
 				$vehicleModel->save();
 				
 				$records++;
-								
-				//var_dump($vehicleModel->years);
-								
-				//echo "Make : $vehicleMake->name | Model : $vehicleModel->name | Year : $vehicleModel->years"."\r\n";
 				
 				\Log::info("Make : $vehicleMake->name | Model : $vehicleModel->name | Year : $vehicleModel->years");
 
