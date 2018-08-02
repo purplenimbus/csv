@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Csv extends Migration
+class CreateMakesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class Csv extends Migration
      */
     public function up()
     {
-        Schema::create('csv', function (Blueprint $table) {
+        Schema::create('makes', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uuid');
-            $table->json('result')->nullable();
-			$table->boolean('processed')->default(false);
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class Csv extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('csv');
+        Schema::dropIfExists('makes');
     }
 }

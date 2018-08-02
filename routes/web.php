@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 Route::post('csv/process','CsvController@process');
+Route::get('csv/{id}','CsvController@getResult');

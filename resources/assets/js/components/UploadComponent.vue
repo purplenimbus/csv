@@ -1,19 +1,16 @@
 <template>
-	<div class="js-upload uk-placeholder uk-text-center">
-		<div uk-spinner v-if="loading"></div>
-		<span v-if="!files.length && !loading">
-			<span uk-icon="icon: cloud-upload"></span>
-			<span class="uk-text-middle">Drop CSV file here or</span>
-			<div uk-form-custom>
-				<input type="file" name="csv">
-				<span class="uk-link">select one</span>
-			</div>
-		</span>
-		<ul class="uk-list uk-list-divider" v-if="files">
-			<li v-for="file in files">
-				{{ file.name }}
-			</li>
-		</ul>
+	<div>
+		<div class="js-upload uk-placeholder uk-text-center">
+			<span v-if="!loading">
+				<span uk-icon="icon: cloud-upload"></span>
+				<span class="uk-text-middle">Drop CSV file here or</span>
+				<div uk-form-custom>
+					<input type="file" name="csv">
+					<span class="uk-link">select one</span>
+				</div>
+			</span>
+		</div>
+		
 	</div>
 </template>
 
@@ -21,7 +18,6 @@
     export default {
 		data:function(){
 			return {
-				files:[],
 				el : {},
 				loading : false,
 				progress : {}
@@ -36,18 +32,19 @@
 					url: '/csv/process',
 					multiple: false,
 					beforeSend: function (e) {
-						console.log('beforeSend file', arguments ,e );
+						console.log('beforeSend file',e );
 						e.headers = {
-							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-						};
+							'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+						};						
 					},
-					beforeAll: function () {
-						
+					beforeAll: function (e,files) {
+						console.log('beforeAll file',files );
 						self.loading = true;
-										
+						self.$emit('files', files);
+
 					},
 					progress: function (e) {
-						console.log('progress',e.total,e.loaded);
+						console.log('progress',e);
 						
 						self.progress.total = e.total;
 						self.progress.loaded = e.loaded;
@@ -55,18 +52,19 @@
 					error: function () {
 						console.log('error', arguments);
 						self.loading = false;
-						UIkit.notification("Error uploading CSV", {status: 'danger'});
+						self.files[0].error = true;
+						UIkit.notification("Error uploading CSV ", {status: 'danger'});
 					},
 					complete: function (e) {
 						
 						self.loading = false;
-						var response = JSON.parse(e.response);
+						//var response = JSON.parse(e.response);
 						
 						console.log('complete',e);
 						
-						UIkit.notification("Processing CSV id "+response.id, {status: 'info'});
+						//UIkit.notification("Processing CSV id "+response.id, {status: 'info'});
 						
-						self.$emit('processing', response);
+						//self.$emit('processing', response);
 					}
 
 				});

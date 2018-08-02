@@ -18,3 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('csv/process','CsvController@process');
+
+Route::get('csv/{id}','CsvController@getResult');

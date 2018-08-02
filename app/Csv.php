@@ -38,6 +38,16 @@ class Csv extends Model
 	}
 	
 	/**
+     * Cast meta property to array
+     *
+     * @var array
+     */
+	 
+	protected $casts = [
+        'result' => 'object',
+    ];
+	
+	/**
 	 *  Setup model event hooks
 	 */
 	public static function boot()

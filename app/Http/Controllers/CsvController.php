@@ -10,18 +10,30 @@ class CsvController extends Controller
 {
     public function process(Request $request){
 		//validate?
-		$csv = new Csv;
+		try{
+			$csv = new Csv;
+			
+			$file = $request->file('files')[0];
+									
+			if(!$file->path()){
+				return response()->json(['status' => 'cant find file path' ],500);
+			}
+			
+			$csv->save();
+			
+			ProcessCsv::dispatch($file->path(),$csv)->onQueue('default');
+						
+			return response()->json(['id' => $csv->uuid,'status' => 'processing'],200);
+		}catch(Exception $e){
+			//var_dump($e);
+			return response()->json(['status' => $e->getMessage() ],500);	
+		}
+
+	}
+	
+	public function getResult($id){
+		$csv = Csv::find($id);
 		
-		$csv->save();
-		
-		$path = $request->file('files')[0]->getPathname();
-		
-		$file = fopen($path, "r");
-		
-		$csv_data = fread($file,filesize($path));
-		
-		ProcessCsv::dispatch($csv_data,$csv);
-		
-		return response()->json(['id' => $csv->uuid,'status' => 'processing'],200);
+		return response()->json($csv,200);
 	}
 }

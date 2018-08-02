@@ -30216,3 +30216,7 @@ iframe.uk-cover {
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
+.uk-dragover {
+  border: 1px dashed #0655a5;
+}
+

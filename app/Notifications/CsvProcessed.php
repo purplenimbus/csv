@@ -6,13 +6,15 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 
 use App\Csv;
 
 class CsvProcessed extends Notification implements ShouldBroadcast
 {
     use Queueable;
-	$csv;
+	var $csv;
     /**
      * Create a new notification instance.
      *
@@ -20,7 +22,7 @@ class CsvProcessed extends Notification implements ShouldBroadcast
      */
     public function __construct(Csv $csv)
     {
-        $this->csv = $csv;
+		$this->csv = $csv;
     }
 
     /**
@@ -43,7 +45,7 @@ class CsvProcessed extends Notification implements ShouldBroadcast
     public function toDatabase($notifiable)
     {
         return [
-			'id' => $this->csv->id,
+            'uuid' => $this->csv->uuid,
             'result' => $this->csv->result
         ];
     }
@@ -57,7 +59,7 @@ class CsvProcessed extends Notification implements ShouldBroadcast
 	public function toBroadcast($notifiable)
 	{
 		return new BroadcastMessage([
-			'id' => $this->csv->id,
+            'uuid' => $this->csv->uuid,
             'result' => $this->csv->result
         ]);
 	}
@@ -85,7 +87,8 @@ class CsvProcessed extends Notification implements ShouldBroadcast
     public function toArray($notifiable)
     {
         return [
-            //
+            'uuid' => $this->csv->uuid,
+            'result' => $this->csv->result
         ];
     }
 }

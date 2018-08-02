@@ -43425,6 +43425,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -43435,6 +43442,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		};
 	},
 	methods: {
+		load: function load(files) {
+			var self = this;
+			console.log('load file', files);
+
+			self.files = files;
+
+			/*self.files.concat(toArray(files));*/
+
+			function toArray(fileList) {
+				return Array.prototype.slice.call(fileList);
+			}
+		},
 		init: function init(data) {
 			var self = this;
 			self.csv = data;
@@ -43461,59 +43480,90 @@ var render = function() {
     [
       _c("div", { staticClass: "uk-container" }, [
         _c("div", { attrs: { "uk-grid": "" } }, [
-          _c("h1", [_vm._v("CSV Parser")]),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              staticClass: "uk-width-1-1",
-              attrs: { id: "parser", "uk-grid": "" }
-            },
-            [
+          _c("div", { staticClass: "uk-width-1-1" }, [
+            _c("form", { attrs: { id: "parser" } }, [
               _c("fieldset", { staticClass: "uk-fieldset uk-width-1-1" }, [
                 _c(
                   "div",
                   { staticClass: "uk-margin" },
                   [
                     _c("upload-component", {
-                      on: { "csv-ready": _vm.init, processing: _vm.init }
+                      on: {
+                        "csv-ready": _vm.init,
+                        processing: _vm.init,
+                        files: _vm.load
+                      }
                     })
                   ],
                   1
                 )
               ])
-            ]
-          ),
-          _vm._v(" "),
-          _vm.result
-            ? _c("div", { attrs: { "uk-grid": "" } }, [
-                _c("fieldset", { staticClass: "uk-fieldset uk-width-1-1" }, [
-                  _c("div", { staticClass: "uk-margin" }, [
-                    _c("textarea", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.result,
-                          expression: "result"
-                        }
-                      ],
-                      staticClass: "uk-textarea",
-                      attrs: { rows: "5", placeholder: "", id: "result" },
-                      domProps: { value: _vm.result },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.result = $event.target.value
-                        }
-                      }
+            ]),
+            _vm._v(" "),
+            _vm.files.length
+              ? _c(
+                  "ul",
+                  { staticClass: "uk-list uk-list-divider" },
+                  [
+                    _c(
+                      "li",
+                      { staticClass: "uk-text-uppercase uk-text-bold" },
+                      [_vm._v("files")]
+                    ),
+                    _vm._v(" "),
+                    _vm._l(_vm.files, function(file) {
+                      return _c(
+                        "li",
+                        { class: file.error ? "uk-text-danger" : "" },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t\t" +
+                              _vm._s(file.name) +
+                              " " +
+                              _vm._s(file.error) +
+                              " "
+                          ),
+                          _vm.loading
+                            ? _c("div", { attrs: { "uk-spinner": "" } })
+                            : _vm._e()
+                        ]
+                      )
                     })
+                  ],
+                  2
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.result
+              ? _c("div", { attrs: { "uk-grid": "" } }, [
+                  _c("fieldset", { staticClass: "uk-fieldset uk-width-1-1" }, [
+                    _c("div", { staticClass: "uk-margin" }, [
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.result,
+                            expression: "result"
+                          }
+                        ],
+                        staticClass: "uk-textarea",
+                        attrs: { rows: "5", placeholder: "", id: "result" },
+                        domProps: { value: _vm.result },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.result = $event.target.value
+                          }
+                        }
+                      })
+                    ])
                   ])
                 ])
-              ])
-            : _vm._e()
+              : _vm._e()
+          ])
         ])
       ])
     ]
@@ -43598,14 +43648,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
-			files: [],
 			el: {},
 			loading: false,
 			progress: {}
@@ -43620,17 +43666,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				url: '/csv/process',
 				multiple: false,
 				beforeSend: function beforeSend(e) {
-					console.log('beforeSend file', arguments, e);
+					console.log('beforeSend file', e);
 					e.headers = {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					};
 				},
-				beforeAll: function beforeAll() {
-
+				beforeAll: function beforeAll(e, files) {
+					console.log('beforeAll file', files);
 					self.loading = true;
+					self.$emit('files', files);
 				},
 				progress: function progress(e) {
-					console.log('progress', e.total, e.loaded);
+					console.log('progress', e);
 
 					self.progress.total = e.total;
 					self.progress.loaded = e.loaded;
@@ -43638,18 +43685,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				error: function error() {
 					console.log('error', arguments);
 					self.loading = false;
-					UIkit.notification("Error uploading CSV", { status: 'danger' });
+					self.files[0].error = true;
+					UIkit.notification("Error uploading CSV ", { status: 'danger' });
 				},
 				complete: function complete(e) {
 
 					self.loading = false;
-					var response = JSON.parse(e.response);
+					//var response = JSON.parse(e.response);
 
 					console.log('complete', e);
 
-					UIkit.notification("Processing CSV id " + response.id, { status: 'info' });
+					//UIkit.notification("Processing CSV id "+response.id, {status: 'info'});
 
-					self.$emit('processing', response);
+					//self.$emit('processing', response);
 				}
 
 			});
@@ -43686,30 +43734,20 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "js-upload uk-placeholder uk-text-center" }, [
-    _vm.loading ? _c("div", { attrs: { "uk-spinner": "" } }) : _vm._e(),
-    _vm._v(" "),
-    !_vm.files.length && !_vm.loading
-      ? _c("span", [
-          _c("span", { attrs: { "uk-icon": "icon: cloud-upload" } }),
-          _vm._v(" "),
-          _c("span", { staticClass: "uk-text-middle" }, [
-            _vm._v("Drop CSV file here or")
-          ]),
-          _vm._v(" "),
-          _vm._m(0)
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _vm.files
-      ? _c(
-          "ul",
-          { staticClass: "uk-list uk-list-divider" },
-          _vm._l(_vm.files, function(file) {
-            return _c("li", [_vm._v("\n\t\t\t" + _vm._s(file.name) + "\n\t\t")])
-          })
-        )
-      : _vm._e()
+  return _c("div", [
+    _c("div", { staticClass: "js-upload uk-placeholder uk-text-center" }, [
+      !_vm.loading
+        ? _c("span", [
+            _c("span", { attrs: { "uk-icon": "icon: cloud-upload" } }),
+            _vm._v(" "),
+            _c("span", { staticClass: "uk-text-middle" }, [
+              _vm._v("Drop CSV file here or")
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
+          ])
+        : _vm._e()
+    ])
   ])
 }
 var staticRenderFns = [
