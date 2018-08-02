@@ -37,40 +37,31 @@ class ProcessCsv implements ShouldQueue
      */
     public function handle()
     {
-        try{
-			
-			/*$csv = Reader::createFromPath($this->csv_path,'r');
-			
-			$results = $csv;
-						
-			var_dump("Delimiter ".$csv->getDelimiter());
-			var_dump("Enclosure ".$csv->getEnclosure());
-			var_dump("Escape ".$csv->getEscape());
-			var_dump("BOM ".$csv->getInputBOM());
-			var_dump(str_getcsv($csv->__toString(),','));*/
+        \Log::info('Making Csv');
+		try{
 			
 			
-			$rows   = array_map('str_getcsv', file($this->csv_path));
-			$header = array_shift($rows);
-			$parsed    = array();
+			//$rows   = array_map('str_getcsv', file($this->csv_path));
+			//$header = array_shift($rows);
+			//$parsed    = array();
 			
 			//var_dump($header);
 			
-			foreach($rows as $row) {
+			/*foreach($rows as $row) {
 				//var_dump($row);
 				$parsed[] = array_combine($header, $row);
 				
-			}
+			}*/
 
-			//var_dump($parsed);
+			//var_dump(['yes']);
 
-			$this->model->result = $parsed;
+			/*$this->model->result = $parsed;
 			
 			$this->model->processed = true;
 			
 			$this->model->save();
 			
-			$this->model->notify(new CsvProcessed($this->model));
+			$this->model->notify(new CsvProcessed($this->model));*/
 			
 		}catch(Exception $e){
 			//DO something on error?

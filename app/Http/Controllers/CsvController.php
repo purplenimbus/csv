@@ -21,9 +21,9 @@ class CsvController extends Controller
 			
 			$csv->save();
 			
-			ProcessCsv::dispatch($file->path(),$csv)->onQueue('default');
-						
-			return response()->json(['id' => $csv->uuid,'status' => 'processing'],200);
+			ProcessCsv::dispatch($file->path(),$csv);
+									
+			//return response()->json(['id' => $csv->uuid,'status' => 'processing'],200);
 		}catch(Exception $e){
 			//var_dump($e);
 			return response()->json(['status' => $e->getMessage() ],500);	
