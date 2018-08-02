@@ -9,8 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 use App\Csv;
-//use App\VehicleMake;
-//use App\VehicleModel;
+use App\VehicleMake;
+use App\VehicleModel;
 use App\Notifications\CsvProcessed;
 
 use League\Csv\Reader;
@@ -40,81 +40,28 @@ class ProcessCsv implements ShouldQueue
     public function handle()
     {
         \Log::info('Making Csv');
-		try{
+		try{			
 			
-			var_dump($this->csv_path);
-			
-			/*$csv = Reader::createFromPath($this->csv_path,'r');
-			
-			$results = $csv;
-						
-			var_dump("Delimiter ".$csv->getDelimiter());
-			var_dump("Enclosure ".$csv->getEnclosure());
-			var_dump("Escape ".$csv->getEscape());
-			var_dump("BOM ".$csv->getInputBOM());
-			var_dump(str_getcsv($csv->__toString(),','));*/
-			
-			
-			/*$rows   = array_map('str_getcsv', file($this->csv_path));
+			$rows   = array_map('str_getcsv', file($this->csv_path));
 			$header = array_shift($rows);
-			$parsed    = array();*/
+			$parsed    = array();
 			
-			//var_dump($header);
-			
-			/*foreach($rows as $row) {
-				//var_dump($row);
-				//$parsed[] = array_combine($header, $row);
-				
-				$parsed[] = $data = array_combine($header, $row);
-				
-				$modelYear = (int)$row[1];
+			foreach($rows as $row) {
+								
+				$modelYear = str_replace('-',',',$row[1]);//explode($row[1],'-');
 				$makeName = mb_strtolower($row[2]);
 				$modelName = mb_strtolower($row[3]);
 				
 				//echo "Make : $makeName | Model : $modelName | Year : $modelYear"."\r\n";
 				
-				//$model = VehicleModel::firstOrCreate(['name' => $modelName]);
+				$make = VehicleMake::firstOrCreate(['name' => $makeName]);
 				
-				//$model = VehicleModel::where('name',$modelName)->first();
+				$model = VehicleModel::firstOrCreate(['name' => $modelName,'make_id' => $make->id , 'years' => $modelYear]);
 				
-				//var_dump(isset($model->id));
-				
-				if(isset($model->id)){
-					echo 'VehicleModel Exists? : '.$model->name."\r\n";
-					continue;
-				}else{
-					$newModel = new VehicleModel;
-					
-					$newModel->name = $modelName;
-					$newModel->meta = [ 'year' => $modelYear ];
-									
-					$carMake = VehicleMake::where('name',$makeName)->first();
-					
-					if(isset($carMake->id)){
-						echo 'VehicleMake Exists : '.$carMake->name."\r\n";
-						$newModel->make_id = $carMake->id;
-					}else{
-						$newMake = new VehicleMake;
-						$newMake->name = $makeName;
-						$newMake->save();
-						$newModel->make_id = $newMake->id;
-					}		
-					
-					$newModel->save();
+				echo "Make : $make->name | Model : $model->name | Year : $model->years"."\r\n";
 
-					
-				}
-			}*/
+			}
 
-			//var_dump(['yes']);
-
-			/*$this->model->result = $parsed;
-			
-			$this->model->processed = true;
-			
-			$this->model->save();
-			
-			$this->model->notify(new CsvProcessed($this->model));*/
 			
 		}catch(Exception $e){
 			//DO something on error?

@@ -17,3 +17,4 @@ Route::get('/', function () {
 
 Route::post('csv/process','CsvController@process');
 Route::get('csv/{id}','CsvController@getResult');
+Route::get('make/{id}','MakeController@getMake');
