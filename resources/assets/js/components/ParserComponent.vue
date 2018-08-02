@@ -15,7 +15,7 @@
 					<ul class="uk-list uk-list-divider" v-if="files.length">
 						<li class="uk-text-uppercase uk-text-bold">files</li>
 						<li v-for="file in files" :class="file.error ? 'uk-text-danger' : ''">
-							{{ file.name }} {{ file.error }} <div uk-spinner v-if="loading"></div>
+							{{ file.name }} {{ file.error }} <div uk-spinner v-if="file.loading"></div>
 						</li>
 					</ul>
 					<div uk-grid v-if="result">
@@ -49,15 +49,12 @@
 				
 				self.files = files;
 								
-				/*self.files.concat(toArray(files));*/
-		
-				function toArray(fileList) {
-					return Array.prototype.slice.call(fileList);
-				}	
 			},
 			init(data){
 				var self = this;
 				self.csv = data;
+				
+				self.files[0].loading = true;
 				
 				console.log('Parser init form',self.csv);	
 			}

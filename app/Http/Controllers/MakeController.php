@@ -12,13 +12,16 @@ class MakeController extends Controller
     public function getMake($id){
 		$make = VehicleMake::find($id);
 		
-		$data = [
-					'uuid' => $make->uuid,
-					'name' => $make->name,
-					'value' => $make->name,
-					'models' => $make->models
-				];
+		$make->load('models');
 		
-		return response()->json($data,200);
+		return response()->json($make,200);
+	}
+	
+	public function getMakes(){
+		$makes = VehicleMake::all();
+		
+		$makes->load('models');
+		
+		return response()->json($makes,200);
 	}
 }

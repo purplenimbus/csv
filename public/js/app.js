@@ -55435,16 +55435,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			console.log('load file', files);
 
 			self.files = files;
-
-			/*self.files.concat(toArray(files));*/
-
-			function toArray(fileList) {
-				return Array.prototype.slice.call(fileList);
-			}
 		},
 		init: function init(data) {
 			var self = this;
 			self.csv = data;
+
+			self.files[0].loading = true;
 
 			console.log('Parser init form', self.csv);
 		}
@@ -55511,7 +55507,7 @@ var render = function() {
                               _vm._s(file.error) +
                               " "
                           ),
-                          _vm.loading
+                          file.loading
                             ? _c("div", { attrs: { "uk-spinner": "" } })
                             : _vm._e()
                         ]

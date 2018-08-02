@@ -18,7 +18,7 @@ class CreateModelsTable extends Migration
 			$table->uuid('uuid');
             $table->string('name');
             $table->integer('make_id');
-            $table->string('years');
+            $table->string('years')->nullable();
             $table->timestamps();
         });
     }

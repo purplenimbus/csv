@@ -45,23 +45,61 @@ class ProcessCsv implements ShouldQueue
 			$rows   = array_map('str_getcsv', file($this->csv_path));
 			$header = array_shift($rows);
 			$parsed    = array();
+			$records = 0;
 			
-			foreach($rows as $row) {
+			foreach($rows as $key => $row) {
+				
+				if($key >= 100){
+					return false;
+				}
 								
-				$modelYear = str_replace('-',',',$row[1]);//explode($row[1],'-');
+				$modelYear = explode(',',str_replace('-',',',$row[1]));
 				$makeName = mb_strtolower($row[2]);
 				$modelName = mb_strtolower($row[3]);
+								
+				$vehicleMake = VehicleMake::firstOrCreate(['name' => $makeName]);
 				
-				//echo "Make : $makeName | Model : $modelName | Year : $modelYear"."\r\n";
+				$vehicleModel = VehicleModel::firstOrCreate(['name' => $modelName,'make_id' => $vehicleMake->id]);
+																		
+				$years = array_merge($modelYear,explode(',',$vehicleModel->years));
 				
-				$make = VehicleMake::firstOrCreate(['name' => $makeName]);
+				//echo "Model Years"."\r\n";
 				
-				$model = VehicleModel::firstOrCreate(['name' => $modelName,'make_id' => $make->id , 'years' => $modelYear]);
+				//var_dump($modelYear);
 				
-				echo "Make : $make->name | Model : $model->name | Year : $model->years"."\r\n";
+				//echo "Years"."\r\n";
+				
+				//var_dump($years);
+				
+				$yearsFiltered = array_unique($years);
+				
+				//echo "Years (Duplicates Removed)"."\r\n";
+				
+				//var_dump($yearsFiltered);
+				
+				$vehicleModel->years = implode(',',array_filter($yearsFiltered));
+				
+				$vehicleModel->save();
+				
+				$records++;
+								
+				//var_dump($vehicleModel->years);
+								
+				//echo "Make : $vehicleMake->name | Model : $vehicleModel->name | Year : $vehicleModel->years"."\r\n";
+				
+				\Log::info("Make : $vehicleMake->name | Model : $vehicleModel->name | Year : $vehicleModel->years");
 
 			}
 
+			$this->model->result = [];
+			
+			$this->model->processed = true;
+			
+			$this->model->save();
+			
+			$this->model->notify(new CsvProcessed($this->model));
+			
+			\Log::info("$records processed");
 			
 		}catch(Exception $e){
 			//DO something on error?
