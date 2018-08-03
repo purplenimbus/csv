@@ -55685,16 +55685,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					self.files[0].error = true;
 					UIkit.notification("Error uploading CSV ", { status: 'danger' });
 				},
-				complete: function complete(e) {
+				complete: function complete() {
+					console.log('error', arguments);
 
-					//self.loading = false;
-					var response = JSON.parse(e.response);
-
-					console.log('complete', e);
-
-					UIkit.notification("Processing CSV id " + response.id, { status: 'info' });
-
-					self.$emit('processing', response);
+					//self.$emit('processing', response);
 				}
 
 			});
