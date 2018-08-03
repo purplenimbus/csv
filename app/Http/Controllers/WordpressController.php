@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use App\Upload;
 use App\Jobs\ProcessUpload;
+use App\Wordpress\NimbusWP;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\HandlerStack;
@@ -26,43 +27,9 @@ class WordpressController extends Controller
 	
 	function __construct(){
 		$this->guzzle = new GuzzleClient();
-		$this->wordpress_url = env('NIMBUS_MEDIA_API_ENPOINT');
+		$this->WP = new NimbusWP(env('NIMBUS_MEDIA_API_ENPOINT'));
 	}
 	
-	protected function  WP($request_type,$endpoint,$payload){
-		$url = $this->wordpress_url.$endpoint;
-		
-		$stack = $this->handler(env('NIMBUS_MEDIA_CLIENT_KEY'),env('NIMBUS_MEDIA_CLIENT_SECRET'),env('NIMBUS_MEDIA_OAUTH_TOKEN_SECRET'),env('NIMBUS_MEDIA_OAUTH_TOKEN'));
-
-		$options = array( 	
-							'form_params' => $payload ? $payload : null , 
-							'handler' => $stack, 
-							'auth' => 'oauth',
-							'exceptions ' =>  false,
-							'query' => [	'per_page' => 100	 ]
-		);
-		
-		return $this->guzzle->request($request_type,$url,$options);
-	}
-	
-	private function handler($consumer_key,$consumer_secret,$token_secret,$token){
-		$handler = new CurlHandler();
-		
-		$stack = HandlerStack::create($handler);
-
-		$middleware = new Oauth1([
-			'consumer_key'    => $consumer_key,
-			'consumer_secret' => $consumer_secret,
-			'token_secret'    => $token_secret,
-			'token'           => $token,
-			'request_method' => Oauth1::REQUEST_METHOD_QUERY,
-			'signature_method' => Oauth1::SIGNATURE_METHOD_HMAC
-		]);
-		
-		$stack->push($middleware);
-		
-		return $stack;
-	}
 	
 	public function processFile(Request $request){
 		try{
@@ -79,14 +46,13 @@ class WordpressController extends Controller
 				'files' => $file
 			];
 			
-			$response = $this->WP('POST','/media',$payload);
+			$response = $this->WP->WP_REQ('POST','/media',$payload);
 			
 			var_dump($response);
 					
 			//return response()->json(['uuid' => $upload->uuid,'status' => 'processing'],200);
 			
 		}catch(Exception $e){
-			//var_dump($e);
 			return response()->json(['status' => $e->getMessage() ],500);	
 		}
 	}
