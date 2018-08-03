@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::post('upload','WordpressController@processFile')->middleware('upload');
+Route::post('upload','WordpressController@processFile');

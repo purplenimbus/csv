@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+
+use Webpatser\Uuid\Uuid as Uuid;
 
 class Upload extends Model
 {

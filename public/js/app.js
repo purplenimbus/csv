@@ -55660,16 +55660,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			self.Uikit = UIkit.upload('.js-upload', {
 
-				url: 'http://purplenimbus.net/media/wp-json/wp/v2/media?oauth_secret=IDg4QX8YQccOjnrYM6ump31IEQAHn9NRUh4w8ia2EcxL8ENS&oauth_consumer_key=iKX0DWS0oktD&oauth_token=eB2O5VCgmHksNfomWnArAjx9&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1533275327&oauth_nonce=aUqDIgF8XIQ&oauth_version=1.0&oauth_signature=7Zw5h8Hj9MtkGVDBGRpeZ6AilfA%3D',
+				url: 'http://localhost:8000/upload',
 				multiple: false,
 				beforeSend: function beforeSend(e) {
 					console.log('beforeSend file', e);
+
 					e.headers = {
 						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 					};
 				},
 				beforeAll: function beforeAll(e, files) {
 					//console.log('beforeAll file',files );
+					self.files = files;
 					//self.loading = true;
 					self.$emit('files', files);
 				},
