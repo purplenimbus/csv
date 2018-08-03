@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\VehicleMake;
 use App\VehicleModel;
 
+use Illuminate\Support\Facades\DB;
+
 class MakeController extends Controller
 {
     public function getMake($id){
@@ -18,10 +20,11 @@ class MakeController extends Controller
 	}
 	
 	public function getMakes(){
-		$makes = VehicleMake::all();
+		$makes = VehicleMake::all()->sortBy('name');
 		
 		$makes->load('models');
 		
+		//var_dump($makes);
 		return response()->json($makes,200);
 	}
 }

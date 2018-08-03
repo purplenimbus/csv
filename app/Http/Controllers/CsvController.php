@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -21,7 +20,7 @@ class CsvController extends Controller
 			
 			$csv->save();
 		
-			ProcessCsv::dispatch($file->path(),$csv)->onQueue('default');
+			ProcessCsv::dispatch($file->path(),$csv);
 			
 			return response()->json(['id' => $csv->uuid,'status' => 'processing'],200);
 			

@@ -48,19 +48,26 @@
 				console.log('load file',files);	
 				
 				self.files = files;
+				
+				self.files[0].loading = true;
 								
 			},
 			init(data){
 				var self = this;
 				self.csv = data;
 				
-				self.files[0].loading = true;
+				console.log('Parser init form',self);	
 				
-				console.log('Parser init form',self.csv);	
+				self.files[0].loading = false;
 			}
 		},
         mounted() {
             console.log('Parser Component mounted.');
+			var channel = pusher.subscribe('private-App.Csv.46');
+			channel.bind('newJist', function(data) {
+			  console.log('newJist',data);
+			  self.files[0].loading = false;
+			});
         }
     }
 </script>

@@ -38,13 +38,13 @@
 						};						
 					},
 					beforeAll: function (e,files) {
-						console.log('beforeAll file',files );
-						self.loading = true;
+						//console.log('beforeAll file',files );
+						//self.loading = true;
 						self.$emit('files', files);
 
 					},
 					progress: function (e) {
-						console.log('progress',e);
+						//console.log('progress',e);
 						
 						self.progress.total = e.total;
 						self.progress.loaded = e.loaded;
@@ -57,14 +57,14 @@
 					},
 					complete: function (e) {
 						
-						self.loading = false;
-						//var response = JSON.parse(e.response);
+						//self.loading = false;
+						var response = JSON.parse(e.response);
 						
 						console.log('complete',e);
 						
-						//UIkit.notification("Processing CSV id "+response.id, {status: 'info'});
+						UIkit.notification("Processing CSV id "+response.id, {status: 'info'});
 						
-						//self.$emit('processing', response);
+						self.$emit('processing', response);
 					}
 
 				});

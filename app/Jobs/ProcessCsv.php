@@ -16,6 +16,8 @@ use App\Notifications\CsvProcessed;
 use League\Csv\Reader;
 use League\Csv\Statement;
 
+ini_set('max_execution_time', 600); 
+
 class ProcessCsv implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -39,18 +41,26 @@ class ProcessCsv implements ShouldQueue
      */
     public function handle()
     {
-        \Log::info('Making Csv');
+        \Log::info('Making Csv path : '.$this->csv_path);
+
 		try{			
 			
 			$rows   = array_map('str_getcsv', file($this->csv_path));
 			$header = array_shift($rows);
 			$parsed    = array();
 			$records = 0;
+			$chunks = collect($rows)->chunk(4000)->toArray();
 			
-			foreach($rows as $key => $row) {
+			 \Log::info('Starting Process on '.count($rows).' records');
+			 
+			//echo "Starting Process on count($rows) records"."\r\n";
+			
+			//var_dump($chunks[0]);
+			
+			foreach($chunks[0] as $key => $row) {
 				
 				if($key >= 100){
-					return false;
+					break;
 				}
 								
 				$modelYear = explode(',',str_replace('-',',',$row[1]));
@@ -71,11 +81,17 @@ class ProcessCsv implements ShouldQueue
 				
 				$records++;
 				
+				//echo "Make : $vehicleMake->name | Model : $vehicleModel->name | Year : $vehicleModel->years"."\r\n";
+				
 				\Log::info("Make : $vehicleMake->name | Model : $vehicleModel->name | Year : $vehicleModel->years");
 
 			}
-
-			$this->model->result = [];
+			
+			//$makes = VehicleMake::all();
+		
+			//$makes->load('models');
+		
+			$this->model->result = '';//$makes;
 			
 			$this->model->processed = true;
 			
@@ -88,5 +104,18 @@ class ProcessCsv implements ShouldQueue
 		}catch(Exception $e){
 			//DO something on error?
 		}
+    }
+	
+    /**
+     * Handle a job failure.
+     *
+     * @return void
+     */
+    public function failed($e)
+    {
+        \Log::info("Job Failed");
+		
+		var_dump("job failed path : ".$this->csv_path);
+		
     }
 }
