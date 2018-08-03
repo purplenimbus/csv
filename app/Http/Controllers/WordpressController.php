@@ -14,7 +14,7 @@ class WordpressController extends Controller
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 	
 	
-	public function process(Request $request){
+	public function processFile(Request $request){
 
 	}
 }

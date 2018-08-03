@@ -15,7 +15,4 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::post('csv/process','CsvController@process');
-Route::get('csv/{id}','CsvController@getResult');
-Route::get('make/{id}','MakeController@getMake');
-Route::get('makes','MakeController@getMakes');
+Route::post('upload','WordpressController@processFile')->middleware('upload');
