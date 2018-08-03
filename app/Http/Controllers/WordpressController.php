@@ -36,9 +36,7 @@ class WordpressController extends Controller
 			//validate file?
 			
 			$upload = new Upload;
-			
-			$upload->save();
-			
+						
 			$file = $request->file('files')[0];
 			
 			$payload = [
@@ -46,12 +44,29 @@ class WordpressController extends Controller
 				'files' => $file
 			];
 			
-			$response = $this->WP->WP_REQ('POST','/media',$payload);
+			$options = [
+				'headers'	=>	[	
+					'content-disposition' => 'attachment; filename=example.com',
+					'content-type' => 'application/x-www-form-urlencoded'
+				],
+				//'form_params' => $payload
+			];
 			
-			var_dump($response);
-					
-			//return response()->json(['uuid' => $upload->uuid,'status' => 'processing'],200);
+			$response = $this->WP->WP_REQ('POST','media',$options);
 			
+			if($response->getStatusCode() === 200){
+				
+				$upload->processed = true;
+			
+				$upload->save();
+				
+				$data = ['uuid' => $upload->uuid,'status' => 'processed','data' => json_decode($response->getBody()->getContents())];
+				
+			}else{
+				$data = ['message' => 'somethings wrong', 'errors' => $response->getReasonPhrase()];
+			}
+
+			return response()->json($data,$response->getStatusCode());
 		}catch(Exception $e){
 			return response()->json(['status' => $e->getMessage() ],500);	
 		}
