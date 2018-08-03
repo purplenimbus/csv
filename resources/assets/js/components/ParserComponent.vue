@@ -63,11 +63,11 @@
 		},
         mounted() {
             console.log('Parser Component mounted.');
-			var channel = pusher.subscribe('private-App.Csv.46');
-			channel.bind('newJist', function(data) {
+			/*var channel = pusher.subscribe('private-App.Csv.46');
+			  channel.bind('newJist', function(data) {
 			  console.log('newJist',data);
 			  self.files[0].loading = false;
-			});
+			});*/
         }
     }
 </script>

@@ -20,8 +20,8 @@
 		<link href="{{ asset('css/app.css') }}" rel="stylesheet">
     </head>
     <body>
-		<div id="app">
-			<parser-component></parser-component>
+		<div id="app" class="uk-section uk-section-default uk-padding-remove">
+			<list-component class="uk-width-1-1"></list-component>
 		</div>
     </body>
 </html>

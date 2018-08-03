@@ -1,16 +1,13 @@
 <template>
-	<div>
-		<div class="js-upload uk-placeholder uk-text-center">
-			<span v-if="!loading">
-				<span uk-icon="icon: cloud-upload"></span>
-				<span class="uk-text-middle">Drop CSV file here or</span>
-				<div uk-form-custom>
-					<input type="file" name="csv">
-					<span class="uk-link">select one</span>
-				</div>
-			</span>
-		</div>
-		
+	<div class="js-upload uk-placeholder uk-text-center uk-margin-remove">
+		<span v-if="!loading">
+			<span uk-icon="icon: cloud-upload"></span>
+			<span class="uk-text-middle">Drop CSV file here or</span>
+			<div uk-form-custom>
+				<input type="file" name="csv">
+				<span class="uk-link">select one</span>
+			</div>
+		</span>
 	</div>
 </template>
 
