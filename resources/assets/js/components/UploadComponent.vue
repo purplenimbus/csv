@@ -25,7 +25,7 @@
 				var self = this;
 		
 				self.Uikit = UIkit.upload('.js-upload', {
-					url: '/upload',
+					url: 'http://nimbus-media.herokuapp.com/upload',
 					multiple: false,
 					beforeSend: function (e) {
 						console.log('beforeSend file',e);

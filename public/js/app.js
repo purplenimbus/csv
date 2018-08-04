@@ -55666,7 +55666,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var self = this;
 
 			self.Uikit = UIkit.upload('.js-upload', {
-				url: '/upload',
+				url: 'http://nimbus-media.herokuapp.com/upload',
 				multiple: false,
 				beforeSend: function beforeSend(e) {
 					console.log('beforeSend file', e);
