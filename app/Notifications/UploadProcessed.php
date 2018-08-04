@@ -8,10 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\BroadcastMessage;
-<<<<<<< HEAD
 
-=======
->>>>>>> media_dev
 use App\Upload;
 
 class UploadProcessed extends Notification implements ShouldBroadcast
