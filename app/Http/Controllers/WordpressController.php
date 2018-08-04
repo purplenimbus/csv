@@ -36,11 +36,8 @@ class WordpressController extends Controller
 	
 	public function processFile(Request $request){
 		try{
-			//validate file?
-			
-			$upload = new Upload;
-			
-			$res = $this->api->process($request,$upload);
+			//validate file?			
+			$res = $this->api->process($request,new Upload);
 
 			return response()->json($res,$res['status']);
 			

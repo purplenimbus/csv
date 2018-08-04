@@ -20,13 +20,10 @@ class NimbusWP
 	var $http;
 	var $wordpress_url;
 	var $guzzle;
-	//var $auth;
-	//var $http_options;
 	
 	function __construct($url=''){
 		$this->guzzle = new GuzzleClient();
 		$this->wordpress_url = $url;
-		//$this->auth = $this->oauth();
 	}
 	
 	public function process(Request $request,Upload $upload){
