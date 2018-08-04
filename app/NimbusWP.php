@@ -7,7 +7,12 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 use Psr\Http\Message\RequestInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
+use App\Notifications\UploadProcessed;
+
+use App\Upload;
 
 class NimbusWP
 {
@@ -15,20 +20,80 @@ class NimbusWP
 	var $http;
 	var $wordpress_url;
 	var $guzzle;
-	//var $auth;
-	//var $http_options;
 	
 	function __construct($url=''){
 		$this->guzzle = new GuzzleClient();
 		$this->wordpress_url = $url;
-		//$this->auth = $this->oauth();
 	}
 	
-	public function oauth(){
-
+	public function process(Request $request,Upload $upload){
+		
+		$file = $request->file('files')[0];
+		
+		$self = $this;
+		
+		$res = [];
+		
+		$payload = [
+			'title' => $file->getClientOriginalName(),
+			'files' => $file
+		];
+		
+		if(Auth::user()->uuid){
+			$payload['meta'] = [
+				'user_uuid' => Auth::user()->uuid
+			];	
+		}	
+		
+		$options = [
+			'headers'	=>	[	
+				'Content-Disposition' => 'attachment; filename='.$file->getClientOriginalName(),
+				//'Content-type' => $file->getClientMimeType()
+			],
+			'form_params' => $payload
+			//'body' => file_get_contents($file->path())
+		];
+		
+		//var_dump($file->getClientMimeType());
+		
+		$response = $self->API('POST','media',$options);
+					
+		if($response->getStatusCode() === 200 || $response->getStatusCode() === 201){
+			
+			$upload->processed = true;
+			
+			$payload = json_decode($response->getBody()->getContents());
+						
+			$upload->url = $payload->guid->rendered;
+			
+			$upload->meta = [
+				'wpId' => $payload->id
+			];
+			
+			if(Auth::user()->uuid){
+				$upload->user_uuid = Auth::user()->uuid; //move to middelware or model?
+			}
+			
+			$upload->save();
+			
+			if(Auth::user()->uuid){
+				Auth::user()->notify(new UploadProcessed($upload));
+			}
+						
+			$res['data'] = ['uuid' => $upload->uuid,'status' => 'processed','url' => $upload->url];
+			
+			 \Log::info('Processed '.$file->getClientOriginalName());
+			
+		}else{
+			$res = ['message' => 'somethings wrong', 'errors' => $response->getReasonPhrase()];
+		}
+		
+		$res['status'] = $response->getStatusCode();
+		
+		return $res;
 	}
 	
-	public function WP_REQ($request_type,$endpoint,$opt){
+	public function API($request_type,$endpoint,$opt){
 		$url = $this->wordpress_url.$endpoint;
 		
 		$stack = $this->handler(env('NIMBUS_MEDIA_CLIENT_KEY'),env('NIMBUS_MEDIA_CLIENT_SECRET'),'6QMpkC0zqR65dvsuPCGsWuRmNpRHATabu0dqQThQ2wdpzIy1',env('NIMBUS_MEDIA_OAUTH_TOKEN'));
