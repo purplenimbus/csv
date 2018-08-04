@@ -55666,7 +55666,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var self = this;
 
 			self.Uikit = UIkit.upload('.js-upload', {
-
 				url: '/upload',
 				multiple: false,
 				beforeSend: function beforeSend(e) {

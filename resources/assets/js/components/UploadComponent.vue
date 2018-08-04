@@ -25,7 +25,6 @@
 				var self = this;
 		
 				self.Uikit = UIkit.upload('.js-upload', {
-
 					url: '/upload',
 					multiple: false,
 					beforeSend: function (e) {
