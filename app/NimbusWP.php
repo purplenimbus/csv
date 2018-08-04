@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Wordpress;
+namespace App;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 use Psr\Http\Message\RequestInterface;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 
 use App\Notifications\UploadProcessed;
 
@@ -16,6 +18,7 @@ use App\Upload;
 
 class NimbusWP
 {
+	use DispatchesJobs;
 	
 	var $http;
 	var $wordpress_url;
