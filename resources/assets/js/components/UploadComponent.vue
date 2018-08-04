@@ -84,6 +84,8 @@
 		},
         mounted() {
 			this.init();
+			
+			console.log('Parser.load',self);
         }
     }
 </script>

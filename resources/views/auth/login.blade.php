@@ -15,25 +15,25 @@
 					<div class="uk-margin">
 						<div class="uk-inline uk-width-1-1">
 							<span class="uk-form-icon" uk-icon="icon: mail"></span>
-							<input id="email" type="email" class="uk-input{{ $errors->has('email') ? 'uk-form-danger' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
-							@if ($errors->has('email'))
-								<span class="invalid-feedback" role="alert">
-									<strong>{{ $errors->first('email') }}</strong>
-								</span>
-							@endif
+							<input id="email" type="email" class="uk-input {{ $errors->has('email') ? 'uk-form-danger' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
 						</div>
+						@if ($errors->has('email'))
+							<span class="invalid-feedback uk-text-small uk-text-danger" role="alert">
+								<strong>{{ $errors->first('email') }}</strong>
+							</span>
+						@endif
 					</div>
 					
 					<div class="uk-margin">
 						<div class="uk-inline uk-width-1-1">
 							<span class="uk-form-icon" uk-icon="icon: lock"></span>
 							<input id="password" type="password" class="uk-input {{ $errors->has('password') ? 'uk-form-danger' : '' }}" name="password" required>
-							@if ($errors->has('password'))
-								<span class="invalid-feedback" role="alert">
-									<strong>{{ $errors->first('password') }}</strong>
-								</span>
-							@endif
 						</div>
+						@if ($errors->has('password'))
+							<span class="invalid-feedback uk-text-small uk-text-danger" role="alert">
+								<strong>{{ $errors->first('password') }}</strong>
+							</span>
+						@endif
 					</div>
 
 					<div class="uk-margin uk-width-1-1">

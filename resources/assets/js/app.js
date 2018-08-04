@@ -20,5 +20,15 @@ Vue.component('parser-component', require('./components/ParserComponent.vue'));
 Vue.component('upload-component', require('./components/UploadComponent.vue'));
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+	propsData: ['userId'],
+	data(){
+		return {
+			userId : document.getElementById('app').getAttribute('user-id'),
+			notifications : []
+		}
+	},
+	mounted(){
+
+	}
 });

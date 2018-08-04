@@ -17,6 +17,8 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
+use Illuminate\Support\Facades\Auth;
+
 class WordpressController extends Controller
 {
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -44,6 +46,12 @@ class WordpressController extends Controller
 				'files' => $file
 			];
 			
+			if(Auth::user()->uuid){
+				$payload['meta'] = [
+					'user_uuid' => Auth::user()->uuid
+				];	
+			}	
+			
 			$options = [
 				'headers'	=>	[	
 					'Content-Disposition' => 'attachment; filename='.$file->getClientOriginalName().'',
@@ -66,8 +74,12 @@ class WordpressController extends Controller
 					'wpId' => $payload->id
 				];
 				
-				$upload->save();
+				if(Auth::user()->uuid){
+					$upload->user_id = Auth::user()->uuid; //move to middelware or model?
+				}
 				
+				$upload->save();
+							
 				$data = ['uuid' => $upload->uuid,'status' => 'processed','url' => $upload->url];
 				
 			}else{

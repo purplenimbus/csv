@@ -21,7 +21,13 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
+	@auth
+    <div id="app" user-id="{{ Auth::user()->uuid }}">
+	@endauth
+	
+	@guest
+	<div id="app">	
+	@endguest
 		<nav class="uk-navbar-container" uk-navbar>
 			<div class="uk-navbar-left">
 				<a class="uk-navbar-item uk-logo" href="{{ url('/') }}">

@@ -1175,7 +1175,15 @@ Vue.component('parser-component', __webpack_require__(41));
 Vue.component('upload-component', __webpack_require__(44));
 
 var app = new Vue({
-  el: '#app'
+  el: '#app',
+  propsData: ['userId'],
+  data: function data() {
+    return {
+      userId: document.getElementById('app').getAttribute('user-id'),
+      notifications: []
+    };
+  },
+  mounted: function mounted() {}
 });
 
 /***/ }),
@@ -55716,6 +55724,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 	mounted: function mounted() {
 		this.init();
+
+		console.log('Parser.load', self);
 	}
 });
 

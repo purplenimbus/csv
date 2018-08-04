@@ -16,7 +16,7 @@ class CreateUploadsTable extends Migration
         Schema::create('uploads', function (Blueprint $table) {
             $table->increments('id');
             $table->uuid('uuid');
-            $table->integer('user_id')->nullable(); //TEMPORARY!!
+            $table->uuid('user_id')->nullable(); //TEMPORARY!!
             $table->boolean('processed')->default(false);
             $table->string('url')->nullable();
             $table->json('meta')->nullable();
