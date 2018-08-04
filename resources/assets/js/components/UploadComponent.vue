@@ -85,7 +85,7 @@
         mounted() {
 			this.init();
 			
-			console.log('Parser.load',self);
+			console.log('Parser.load',this);
         }
     }
 </script>

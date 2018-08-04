@@ -25,7 +25,6 @@ const app = new Vue({
 	data(){
 		return {
 			userId : document.getElementById('app').getAttribute('user-id'),
-			notifications : []
 		}
 	},
 	mounted(){

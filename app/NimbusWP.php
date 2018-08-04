@@ -39,11 +39,8 @@ class NimbusWP
 			'handler' => $stack, 
 			'auth' => 'oauth',
 			'exceptions ' =>  true,
-			//'query' => [	'per_page' => 100	 ]
 		);
-		
-		//var_dump($opt);
-		
+				
 		if(isset($opt['headers'])){
 			foreach($opt['headers'] as $header_key => $header){
 				$stack->push($self->add_header($header_key,$header));
@@ -51,10 +48,8 @@ class NimbusWP
 			unset($opt['headers']);
 		}
 		
-		
 		$options = array_merge($options,$opt);
-
-				
+	
 		return $this->guzzle->request($request_type,$url,$options);
 				
 	}
@@ -85,9 +80,7 @@ class NimbusWP
 			'request_method' => Oauth1::REQUEST_METHOD_QUERY,
 			'signature_method' => Oauth1::SIGNATURE_METHOD_HMAC
 		]);
-		
-		//var_dump($middleware);
-		
+				
 		$stack->push($middleware);
 		
 		return $stack;

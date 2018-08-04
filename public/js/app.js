@@ -1179,8 +1179,7 @@ var app = new Vue({
   propsData: ['userId'],
   data: function data() {
     return {
-      userId: document.getElementById('app').getAttribute('user-id'),
-      notifications: []
+      userId: document.getElementById('app').getAttribute('user-id')
     };
   },
   mounted: function mounted() {}
@@ -55725,7 +55724,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	mounted: function mounted() {
 		this.init();
 
-		console.log('Parser.load', self);
+		console.log('Parser.load', this);
 	}
 });
 
