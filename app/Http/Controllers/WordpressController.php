@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 use App\Upload;
-use App\Jobs\ProcessUpload;
+use App\Notifications\UploadProcessed;
 use App\Wordpress\NimbusWP;
 
 use GuzzleHttp\Client as GuzzleClient;
@@ -29,7 +29,7 @@ class WordpressController extends Controller
 	
 	function __construct(){
 		$this->guzzle = new GuzzleClient();
-		$this->WP = new NimbusWP(env('NIMBUS_MEDIA_API_ENPOINT'));
+		$this->NIMBUS = new NimbusWP(env('NIMBUS_MEDIA_API_ENPOINT'));
 	}
 	
 	
@@ -54,13 +54,16 @@ class WordpressController extends Controller
 			
 			$options = [
 				'headers'	=>	[	
-					'Content-Disposition' => 'form-data; filename='.$file->getClientOriginalName().'',
-					//'Content-Type' => 'application/x-www-form-urlencoded'
+					'Content-Disposition' => 'attachment; filename='.$file->getClientOriginalName(),
+					//'Content-type' => $file->getClientMimeType()
 				],
 				'form_params' => $payload
+				//'body' => file_get_contents($file->path())
 			];
 			
-			$response = $this->WP->WP_REQ('POST','media',$options);
+			//var_dump($file->getClientMimeType());
+			
+			$response = $this->NIMBUS->API('POST','media',$options);
 						
 			if($response->getStatusCode() === 200 || $response->getStatusCode() === 201){
 				
@@ -75,12 +78,18 @@ class WordpressController extends Controller
 				];
 				
 				if(Auth::user()->uuid){
-					$upload->user_id = Auth::user()->uuid; //move to middelware or model?
+					$upload->user_uuid = Auth::user()->uuid; //move to middelware or model?
 				}
 				
 				$upload->save();
+				
+				if(Auth::user()->uuid){
+					Auth::user()->notify(new UploadProcessed($upload));
+				}
 							
 				$data = ['uuid' => $upload->uuid,'status' => 'processed','url' => $upload->url];
+				
+				 \Log::info('Processed '.$file->getClientOriginalName());
 				
 			}else{
 				$data = ['message' => 'somethings wrong', 'errors' => $response->getReasonPhrase()];

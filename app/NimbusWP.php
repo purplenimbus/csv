@@ -8,6 +8,7 @@ use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 use Psr\Http\Message\RequestInterface;
 
+use App\Notifications\UploadProcessed;
 
 class NimbusWP
 {
@@ -28,7 +29,7 @@ class NimbusWP
 
 	}
 	
-	public function WP_REQ($request_type,$endpoint,$opt){
+	public function API($request_type,$endpoint,$opt){
 		$url = $this->wordpress_url.$endpoint;
 		
 		$stack = $this->handler(env('NIMBUS_MEDIA_CLIENT_KEY'),env('NIMBUS_MEDIA_CLIENT_SECRET'),'6QMpkC0zqR65dvsuPCGsWuRmNpRHATabu0dqQThQ2wdpzIy1',env('NIMBUS_MEDIA_OAUTH_TOKEN'));
