@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 use App\Upload;
 use App\Notifications\UploadProcessed;
-use App\Wordpress\NimbusWP;
+use App\NimbusWP;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\HandlerStack;

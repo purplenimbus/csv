@@ -8,26 +8,21 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Notifications\Messages\BroadcastMessage;
-<<<<<<< HEAD
+use App\Csv;
 
-=======
->>>>>>> media_dev
-use App\Upload;
-
-class UploadProcessed extends Notification implements ShouldBroadcast
+class CsvProcessed extends Notification implements ShouldBroadcast
 {
     use Queueable;
-	var $upload;
+	var $csv;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Upload $upload)
+    public function __construct(Csv $csv)
     {
-		$this->upload = $upload;
+		$this->csv = $csv;
     }
-
     /**
      * Get the notification's delivery channels.
      *
@@ -48,8 +43,8 @@ class UploadProcessed extends Notification implements ShouldBroadcast
     public function toDatabase($notifiable)
     {
         return [
-            'uuid' => $this->upload->uuid,
-            'url' => $this->upload->url
+            'uuid' => $this->csv->uuid,
+            'result' => $this->csv->result
         ];
     }
 	
@@ -62,8 +57,8 @@ class UploadProcessed extends Notification implements ShouldBroadcast
 	public function toBroadcast($notifiable)
 	{
 		return new BroadcastMessage([
-            'uuid' => $this->upload->uuid,
-            'url' => $this->upload->url
+            'uuid' => $this->csv->uuid,
+            'result' => $this->csv->result
         ]);
 	}
 	
@@ -80,10 +75,6 @@ class UploadProcessed extends Notification implements ShouldBroadcast
                     ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> media_dev
     /**
      * Get the array representation of the notification.
      *
@@ -93,15 +84,8 @@ class UploadProcessed extends Notification implements ShouldBroadcast
     public function toArray($notifiable)
     {
         return [
-            'uuid' => $this->upload->uuid,
-<<<<<<< HEAD
-            'result' => $this->upload->result
+            'uuid' => $this->csv->uuid,
+            'result' => $this->csv->result
         ];
     }
 }
-=======
-            'url' => $this->upload->url
-        ];
-    }
-}
->>>>>>> media_dev
