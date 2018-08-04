@@ -26,7 +26,7 @@
 		
 				self.Uikit = UIkit.upload('.js-upload', {
 
-					url: 'http://localhost:8000/upload',
+					url: '/upload',
 					multiple: false,
 					beforeSend: function (e) {
 						console.log('beforeSend file',e);
