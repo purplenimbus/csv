@@ -54,7 +54,7 @@ class WordpressController extends Controller
 			
 			$options = [
 				'headers'	=>	[	
-					'Content-Disposition' => 'attachment; filename='.$file->getClientOriginalName().'',
+					'Content-Disposition' => 'form-data; filename='.$file->getClientOriginalName().'',
 					//'Content-Type' => 'application/x-www-form-urlencoded'
 				],
 				'form_params' => $payload
