@@ -30220,3 +30220,8 @@ iframe.uk-cover {
   border: 1px dashed #0655a5;
 }
 
+.center-block {
+  margin: 0px auto !important;
+  float: none !important;
+}
+

@@ -30,4 +30,14 @@ class Upload extends Model
 			$model->uuid = (string) Uuid::generate(4);
 		});
 	}
+	
+	/**
+     * Cast meta property to array
+     *
+     * @var array
+     */
+	 
+	protected $casts = [
+        'meta' => 'array',
+    ];
 }

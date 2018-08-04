@@ -46,21 +46,29 @@ class WordpressController extends Controller
 			
 			$options = [
 				'headers'	=>	[	
-					'content-disposition' => 'attachment; filename=example.com',
-					'content-type' => 'application/x-www-form-urlencoded'
+					'Content-Disposition' => 'attachment; filename='.$file->getClientOriginalName().'',
+					//'Content-Type' => 'application/x-www-form-urlencoded'
 				],
-				//'form_params' => $payload
+				'form_params' => $payload
 			];
 			
 			$response = $this->WP->WP_REQ('POST','media',$options);
-			
-			if($response->getStatusCode() === 200){
+						
+			if($response->getStatusCode() === 200 || $response->getStatusCode() === 201){
 				
 				$upload->processed = true;
-			
+				
+				$payload = json_decode($response->getBody()->getContents());
+							
+				$upload->url = $payload->guid->rendered;
+				
+				$upload->meta = [
+					'wpId' => $payload->id
+				];
+				
 				$upload->save();
 				
-				$data = ['uuid' => $upload->uuid,'status' => 'processed','data' => json_decode($response->getBody()->getContents())];
+				$data = ['uuid' => $upload->uuid,'status' => 'processed','url' => $upload->url];
 				
 			}else{
 				$data = ['message' => 'somethings wrong', 'errors' => $response->getReasonPhrase()];

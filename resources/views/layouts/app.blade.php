@@ -28,7 +28,7 @@
                     {{ config('app.name', 'Laravel') }}
                 </a>
 			</div>
-			<div class="uk-navbar-right">
+			<div class="uk-navbar-right uk-hidden">
 				<ul class="uk-navbar-nav">
 					@guest
 						<li>
@@ -61,7 +61,7 @@
 			</div>
 		</nav>
 		
-		<main class="uk-section uk-section-default uk-padding-remove">
+		<main class="uk-section uk-section-default uk-padding-remove uk-height-viewport">
 			@yield('content')
 		</main>
     </div>
