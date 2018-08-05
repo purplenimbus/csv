@@ -39,13 +39,12 @@ class NimbusWP
 		
 		$payload = [
 			'title' => $file->getClientOriginalName(),
-			'files' => $file
+			'files' => $file,
+			'meta' => []
 		];
 		
-		if(Auth::user()->uuid){
-			$payload['meta'] = [
-				'user_uuid' => Auth::user()->uuid
-			];	
+		if(Auth::user() && isset(Auth::user()->uuid)){
+			$payload['meta']['user_uuid'] = Auth::user()->uuid;
 		}	
 		
 		$options = [
