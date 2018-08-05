@@ -77,10 +77,7 @@ class UploadProcessed extends Notification implements ShouldBroadcast
                     ->action('Notification Action', url('/'))
                     ->line('Thank you for using our application!');
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> media_dev
     /**
      * Get the array representation of the notification.
      *
@@ -91,14 +88,7 @@ class UploadProcessed extends Notification implements ShouldBroadcast
     {
         return [
             'uuid' => $this->upload->uuid,
-<<<<<<< HEAD
-            'result' => $this->upload->result
-        ];
-    }
-}
-=======
             'url' => $this->upload->url
         ];
     }
 }
->>>>>>> media_dev
