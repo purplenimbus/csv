@@ -7,7 +7,7 @@
 						<fieldset class="uk-fieldset uk-width-1-1">
 
 							<div class="uk-margin">
-								<upload-component v-on:csv-ready="init" v-on:processing="init" v-on:files="load"></upload-component>
+								<upload-component v-on:processed="init" v-on:files="load"></upload-component>
 							</div>
 
 						</fieldset>

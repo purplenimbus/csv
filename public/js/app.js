@@ -55496,11 +55496,7 @@ var render = function() {
                   { staticClass: "uk-margin" },
                   [
                     _c("upload-component", {
-                      on: {
-                        "csv-ready": _vm.init,
-                        processing: _vm.init,
-                        files: _vm.load
-                      }
+                      on: { processed: _vm.init, files: _vm.load }
                     })
                   ],
                   1
@@ -55695,10 +55691,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					self.files[0].error = true;
 					UIkit.notification("Error uploading CSV ", { status: 'danger' });
 				},
-				complete: function complete() {
-					console.log('error', arguments);
+				complete: function complete(e) {
+					//console.log('complete', e);
 
-					//self.$emit('processing', response);
+					var message = 'Success';
+
+					if (JSON.parse(e.response)) {
+						var response = JSON.parse(e.response);
+						//console.log('response',response);
+						message = "<p>" + response.data.url + '</p>';
+
+						UIkit.notification(message, { status: 'success' });
+
+						self.$emit('processed', response);
+					}
 				}
 
 			});

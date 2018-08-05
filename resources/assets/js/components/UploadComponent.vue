@@ -55,10 +55,21 @@
 						self.files[0].error = true;
 						UIkit.notification("Error uploading CSV ", {status: 'danger'});
 					},
-					complete: function () {
-						console.log('error', arguments);
-					
-						//self.$emit('processing', response);
+					complete: function (e) {
+						//console.log('complete', e);
+						
+						var message = 'Success';
+						
+						if(JSON.parse(e.response)){
+							var response = JSON.parse(e.response);
+							//console.log('response',response);
+							message = "<p>"+response.data.url+'</p>';
+							
+							UIkit.notification(message, {status: 'success'});
+						
+							self.$emit('processed', response);
+						}
+						
 					}
 
 				});
