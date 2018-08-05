@@ -55692,7 +55692,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					UIkit.notification("Error uploading CSV ", { status: 'danger' });
 				},
 				complete: function complete(e) {
-					//console.log('complete', e);
 
 					var message = 'Success';
 
@@ -55702,8 +55701,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 						message = "<p>" + response.data.url + '</p>';
 
 						UIkit.notification(message, { status: 'success' });
+						console.log('complete', response, e);
 
-						self.$emit('processed', response);
+						self.$emit('complete', response);
 					}
 				}
 
@@ -55731,7 +55731,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	mounted: function mounted() {
 		this.init();
 
-		console.log('Parser.load', self);
+		console.log('Upload component mounted', self);
 	}
 });
 
@@ -55866,26 +55866,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
-			data: []
+			list: [],
+			files: [],
+			loading: true
 		};
 	},
 	methods: {
-		init: function init() {
-			var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+		load: function load() {
+			var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
 			var self = this;
-			console.log('init', self, data);
+			console.log('List component init , user id ' + self.$root.userId, self, data);
 
-			self.data = data;
+			//self.list = data;
+
+			if (!data && self.$root.userId) {
+				axios.get('/user/' + self.$root.userId + '/files').then(function (result) {
+					console.log('List component axios', result);
+					self.files = result.data;
+					self.loading = false;
+				});
+			}
+
+			self.list.unshift(data);
 		}
 	},
 	mounted: function mounted() {
 		console.log('List Component mounted.');
-		this.init();
+		this.load(false);
 	}
 });
 
@@ -55910,16 +55930,25 @@ var render = function() {
             _c(
               "fieldset",
               { staticClass: "uk-fieldset uk-width-1-1" },
-              [_c("upload-component", { on: { files: _vm.init } })],
+              [
+                _c("upload-component", {
+                  on: {
+                    files: _vm.load,
+                    "complete:": function($event) {
+                      _vm.load(false)
+                    }
+                  }
+                })
+              ],
               1
             )
           ]),
           _vm._v(" "),
-          _vm.data.length
+          _vm.list.length
             ? _c(
                 "ul",
                 { staticClass: "uk-list uk-list-divider" },
-                _vm._l(_vm.data, function(file) {
+                _vm._l(_vm.list, function(file) {
                   return _c(
                     "li",
                     { class: file.error ? "uk-text-danger" : "" },
@@ -55937,6 +55966,35 @@ var render = function() {
                     ]
                   )
                 })
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.loading ? _c("div", { attrs: { "uk-spinner": "" } }) : _vm._e(),
+          _vm._v(" "),
+          _vm.files.length
+            ? _c(
+                "ul",
+                { staticClass: "uk-list uk-list-divider" },
+                [
+                  _c("li", [_vm._v("Your Files")]),
+                  _vm._v(" "),
+                  _vm._l(_vm.files, function(file) {
+                    return _c(
+                      "li",
+                      { class: file.error ? "uk-text-danger" : "" },
+                      [
+                        _vm._v(
+                          "\n\t\t\t\t\t\t" +
+                            _vm._s(file.meta.wp_data.title.raw) +
+                            " " +
+                            _vm._s(file.error) +
+                            "\n\t\t\t\t\t"
+                        )
+                      ]
+                    )
+                  })
+                ],
+                2
               )
             : _vm._e()
         ])

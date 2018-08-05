@@ -45,4 +45,17 @@ class WordpressController extends Controller
 			return response()->json(['status' => $e->getMessage() ],500);	
 		}
 	}
+	
+	public function getFiles($uuid,Request $request){
+		try{
+			//validate request?
+			
+			$images = Upload::where(['user_uuid' => $uuid])->get();
+
+			return response()->json($images,200);
+			
+		}catch(Exception $e){
+			return response()->json(['status' => $e->getMessage() ],500);	
+		}
+	}
 }

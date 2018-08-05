@@ -65,11 +65,9 @@ class NimbusWP
 			$upload->processed = true;
 			
 			$payload = json_decode($response->getBody()->getContents());
-						
-			$upload->url = $payload->guid->rendered;
-			
+									
 			$upload->meta = [
-				'wpId' => $payload->id
+				'wp_data' => $payload,
 			];
 			
 			if(Auth::user()->uuid){
@@ -82,7 +80,7 @@ class NimbusWP
 				Auth::user()->notify(new UploadProcessed($upload));
 			}
 						
-			$res['data'] = ['uuid' => $upload->uuid,'status' => 'processed','url' => $upload->url];
+		$res['data'] = ['uuid' => $upload->uuid,'status' => 'processed','wp_data' => $upload->meta['wp_data']];
 			
 			 \Log::info('Processed '.$file->getClientOriginalName());
 			

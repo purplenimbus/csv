@@ -56,7 +56,7 @@
 						UIkit.notification("Error uploading CSV ", {status: 'danger'});
 					},
 					complete: function (e) {
-						//console.log('complete', e);
+						
 						
 						var message = 'Success';
 						
@@ -66,8 +66,9 @@
 							message = "<p>"+response.data.url+'</p>';
 							
 							UIkit.notification(message, {status: 'success'});
-						
-							self.$emit('processed', response);
+							console.log('complete', response,e);
+							
+							self.$emit('complete', response);
 						}
 						
 					}
@@ -96,7 +97,7 @@
         mounted() {
 			this.init();
 			
-			console.log('Parser.load',self);
+			console.log('Upload component mounted',self);
         }
     }
 </script>
