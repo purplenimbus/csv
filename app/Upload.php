@@ -32,6 +32,14 @@ class Upload extends Model
 	}
 	
 	/**
+     * Get the author that wrote the book.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+	
+	/**
      * Cast meta property to array
      *
      * @var array

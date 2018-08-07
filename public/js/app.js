@@ -55649,13 +55649,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
 			el: {},
 			loading: false,
-			progress: {}
+			progress: {},
+			files: []
 		};
 	},
 	methods: {
@@ -55700,10 +55708,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 						//console.log('response',response);
 						message = "<p>" + response.data.url + '</p>';
 
-						UIkit.notification(message, { status: 'success' });
+						//UIkit.notification(message, {status: 'success'});
 						console.log('complete', response, e);
 
 						self.$emit('complete', response);
+
+						self.files = [];
 					}
 				}
 
@@ -55743,23 +55753,44 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "js-upload uk-placeholder uk-text-center uk-margin-remove" },
-    [
-      !_vm.loading
-        ? _c("span", [
-            _c("span", { attrs: { "uk-icon": "icon: cloud-upload" } }),
-            _vm._v(" "),
-            _c("span", { staticClass: "uk-text-middle" }, [
-              _vm._v("Drop CSV file here or")
-            ]),
-            _vm._v(" "),
-            _vm._m(0)
-          ])
-        : _vm._e()
-    ]
-  )
+  return _c("div", [
+    _c(
+      "div",
+      {
+        staticClass: "js-upload uk-placeholder uk-text-center uk-margin-remove"
+      },
+      [
+        !_vm.loading
+          ? _c("span", [
+              _c("span", { attrs: { "uk-icon": "icon: cloud-upload" } }),
+              _vm._v(" "),
+              _c("span", { staticClass: "uk-text-middle" }, [
+                _vm._v("Drop CSV file here or")
+              ]),
+              _vm._v(" "),
+              _vm._m(0)
+            ])
+          : _vm._e()
+      ]
+    ),
+    _vm._v(" "),
+    _vm.files.length
+      ? _c(
+          "ul",
+          { staticClass: "uk-list uk-list-divider" },
+          _vm._l(_vm.files, function(file) {
+            return _c("li", { class: file.error ? "uk-text-danger" : "" }, [
+              _vm._v(
+                "\n\t\t\t" + _vm._s(file.name) + " " + _vm._s(file.error) + " "
+              ),
+              file.loading
+                ? _c("div", { attrs: { "uk-spinner": "" } })
+                : _vm._e()
+            ])
+          })
+        )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -55869,11 +55900,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -55884,28 +55910,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		};
 	},
 	methods: {
-		load: function load() {
-			var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
+		init: function init() {
 			var self = this;
-			console.log('List component init , user id ' + self.$root.userId, self, data);
+			console.log('List component init , user id ' + self.$root.userId, self);
 
-			//self.list = data;
-
-			if (!data && self.$root.userId) {
+			if (self.$root.userId) {
 				axios.get('/user/' + self.$root.userId + '/files').then(function (result) {
 					console.log('List component axios', result);
 					self.files = result.data;
 					self.loading = false;
 				});
 			}
-
-			self.list.unshift(data);
 		}
 	},
 	mounted: function mounted() {
 		console.log('List Component mounted.');
-		this.load(false);
+		this.init();
 	}
 });
 
@@ -55930,46 +55950,17 @@ var render = function() {
             _c(
               "fieldset",
               { staticClass: "uk-fieldset uk-width-1-1" },
-              [
-                _c("upload-component", {
-                  on: {
-                    files: _vm.load,
-                    "complete:": function($event) {
-                      _vm.load(false)
-                    }
-                  }
-                })
-              ],
+              [_c("upload-component", { on: { "complete:": _vm.init } })],
               1
             )
           ]),
           _vm._v(" "),
-          _vm.list.length
-            ? _c(
-                "ul",
-                { staticClass: "uk-list uk-list-divider" },
-                _vm._l(_vm.list, function(file) {
-                  return _c(
-                    "li",
-                    { class: file.error ? "uk-text-danger" : "" },
-                    [
-                      _vm._v(
-                        "\n\t\t\t\t\t\t" +
-                          _vm._s(file.name) +
-                          " " +
-                          _vm._s(file.error) +
-                          " "
-                      ),
-                      file.loading
-                        ? _c("div", { attrs: { "uk-spinner": "" } })
-                        : _vm._e()
-                    ]
-                  )
-                })
-              )
+          _vm.loading
+            ? _c("div", {
+                staticClass: "uk-text-center uk-width-1-1 uk-margin",
+                attrs: { "uk-spinner": "" }
+              })
             : _vm._e(),
-          _vm._v(" "),
-          _vm.loading ? _c("div", { attrs: { "uk-spinner": "" } }) : _vm._e(),
           _vm._v(" "),
           _vm.files.length
             ? _c(

@@ -4,16 +4,11 @@
 			<div class="uk-width-1-1">
 				<form id="parser">
 					<fieldset class="uk-fieldset uk-width-1-1">
-						<upload-component v-on:files="load" v-on:complete:="load(false)"></upload-component>
+						<upload-component v-on:complete:="init"></upload-component>
 					</fieldset>
 				</form>
-				<ul class="uk-list uk-list-divider" v-if="list.length">
-					<li v-for="file in list" :class="file.error ? 'uk-text-danger' : ''">
-						{{ file.name }} {{ file.error }} <div uk-spinner v-if="file.loading"></div>
-					</li>
-				</ul>
 				
-				<div uk-spinner v-if="loading"></div>
+				<div uk-spinner v-if="loading" class="uk-text-center uk-width-1-1 uk-margin"></div>
 				<ul class="uk-list uk-list-divider" v-if="files.length">
 					<li>Your Files</li>
 					<li v-for="file in files" :class="file.error ? 'uk-text-danger' : ''">
@@ -35,13 +30,11 @@
 			}
 		},
 		methods : {
-			load(data = false){
+			init(){
 				var self = this;
-				console.log('List component init , user id '+self.$root.userId,self,data);	
-				
-				//self.list = data;
-				
-				if(!data && self.$root.userId){
+				console.log('List component init , user id '+self.$root.userId,self);	
+								
+				if(self.$root.userId){
 					axios.get('/user/'+self.$root.userId+'/files').then(function(result){
 						console.log('List component axios',result);	
 						self.files = result.data;
@@ -49,12 +42,11 @@
 					});
 				}
 				
-				self.list.unshift(data);
 			}
 		},
         mounted() {
             console.log('List Component mounted.');
-			this.load(false);
+			this.init();
         }
     }
 </script>
