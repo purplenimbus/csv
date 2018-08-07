@@ -10,9 +10,26 @@
 				
 				<div uk-spinner v-if="loading" class="uk-text-center uk-width-1-1 uk-margin"></div>
 				<ul class="uk-list uk-list-divider" v-if="files.length">
-					<li>Your Files</li>
-					<li v-for="file in files" :class="file.error ? 'uk-text-danger' : ''">
-						{{ file.meta.wp_data.title.raw }} {{ file.error }}
+					<li class="uk-clearfix">
+						<div class="uk-float-left">
+							<ul class="uk-iconnav uk-padding-remove">
+								<li><a v-on:click="typeFilterKey = 'image'"  :class="{ active: typeFilterKey == 'image' }" uk-icon="icon: image"></a></li>
+								<li><a v-on:click="typeFilterKey = 'audio'"  :class="{ active: typeFilterKey == 'audio' }" uk-icon="icon: play"></a></li>
+								<li><a v-on:click="typeFilterKey = 'document'"  :class="{ active: typeFilterKey == 'document' }" uk-icon="icon: file"></a></li>
+							</ul>
+						</div>
+					</li>
+					<li v-for="file in files" :class="file.error ? 'uk-text-danger' : ''" class="uk-clearfix">
+						<div class="uk-float-left">
+							<img :src="file.meta.wp_data.guid.rendered" width="50" height="50" class="uk-hidden">
+							<span class="uk-text-middle" uk-lightbox><a :href="file.meta.wp_data.guid.rendered">{{ file.meta.wp_data.title.raw }}</a></span>
+						</div>
+						<ul class="uk-iconnav uk-float-right">
+							<li class="uk-hidden"><a href="#" uk-icon="icon: download"></a></li>
+							<li class="uk-hidden"><a href="#" uk-icon="icon: link"></a></li>
+							<li class="uk-hidden"><a href="#" uk-icon="icon: trash"></a></li>
+							<li v-if="file.error" class="uk-hidden"><a href="#" uk-icon="icon: trash"></a></li>
+						</ul>
 					</li>
 				</ul>
 			</div>
@@ -26,7 +43,17 @@
 			return {
 				list : [],
 				files : [],
-				loading : true
+				loading : true,
+				typeFilterKey :'all'
+			}
+		},
+		computed : {
+			typeFilter(){
+				console.log('computed typeFilter',this.typeFilterKey,this[this.typeFilterKey]);
+				return this[this.typeFilterKey];
+			},
+			image(){
+				return this.file.filter((file) => file.meta.wp_meta.mime_type === 'image/jpeg')
 			}
 		},
 		methods : {

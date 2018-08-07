@@ -117,20 +117,7 @@ class NimbusWP
 			'exceptions ' =>  false,
 			'http_errors' =>  false,
 			//'query' => [	'per_page' => 100	 ]
-		);
-		
-		//var_dump($opt);
-		
-		//if(isset($opt['headers'])){
-		/*if(isset($opt['multipart'][0]['headers'])){
-			//foreach($opt['headers'] as $header_key => $header){
-			foreach($opt['multipart'][0]['headers'] as $header_key => $header){
-				$stack->push($self->add_header($header_key,$header));
-			}
-			//unset($opt['headers']);
-			unset($opt['multipart'][0]['headers']);
-		}*/
-		
+		);		
 		
 		$options = array_merge($options,$opt);
 
