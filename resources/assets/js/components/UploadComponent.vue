@@ -105,12 +105,8 @@
 		},
         mounted() {
 			this.init();
-			
-<<<<<<< HEAD
-			console.log('Parser.load',this);
-=======
+
 			console.log('Upload component mounted',self);
->>>>>>> media_dev
         }
     }
 </script>

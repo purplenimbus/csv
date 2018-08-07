@@ -55631,9 +55631,117 @@ module.exports = Component.exports
 
 /***/ }),
 /* 45 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed: SyntaxError: C:/Users/Anthony/Documents/GitHub/ccps/csv/resources/assets/js/components/UploadComponent.vue: Unexpected token (109:0)\n\n  107 | \t\t\tthis.init();\n  108 | \t\t\t\n> 109 | <<<<<<< HEAD\n      | ^\n  110 | \t\t\tconsole.log('Parser.load',this);\n  111 | =======\n  112 | \t\t\tconsole.log('Upload component mounted',self);\n");
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			el: {},
+			loading: false,
+			progress: {},
+			files: []
+		};
+	},
+	methods: {
+		init: function init() {
+			var self = this;
+
+			self.Uikit = UIkit.upload('.js-upload', {
+				url: 'http://nimbus-media.herokuapp.com/upload',
+				multiple: false,
+				beforeSend: function beforeSend(e) {
+					console.log('beforeSend file', e);
+
+					e.headers = {
+						'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+					};
+				},
+				beforeAll: function beforeAll(e, files) {
+					//console.log('beforeAll file',files );
+					self.files = files;
+					//self.loading = true;
+					self.$emit('files', files);
+				},
+				progress: function progress(e) {
+					//console.log('progress',e);
+
+					self.progress.total = e.total;
+					self.progress.loaded = e.loaded;
+				},
+				error: function error() {
+					console.log('error', arguments);
+					self.loading = false;
+					self.files[0].error = true;
+					UIkit.notification("Error uploading CSV ", { status: 'danger' });
+				},
+				complete: function complete(e) {
+
+					var message = 'Success';
+
+					if (JSON.parse(e.response)) {
+						var response = JSON.parse(e.response);
+						//console.log('response',response);
+						message = "<p>" + response.data.url + '</p>';
+
+						//UIkit.notification(message, {status: 'success'});
+						console.log('complete', response, e);
+
+						self.$emit('complete', response);
+
+						self.files = [];
+					}
+				}
+
+			});
+
+			self.el = self.Uikit.$el;
+		},
+		parse: function parse(file) {
+			var self = this;
+
+			console.log('Parser.load', file);
+
+			var reader = new FileReader();
+
+			reader.readAsText(file);
+
+			// attach event, that will be fired, when read is end
+			reader.addEventListener("load", function () {
+				self.loading = false;
+				console.log('reader loaded', reader);
+				self.$emit('csv-ready', reader.result);
+			});
+		}
+	},
+	mounted: function mounted() {
+		this.init();
+
+		console.log('Upload component mounted', self);
+	}
+});
 
 /***/ }),
 /* 46 */
