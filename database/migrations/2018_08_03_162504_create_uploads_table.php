@@ -18,7 +18,7 @@ class CreateUploadsTable extends Migration
             $table->uuid('uuid');
             $table->uuid('user_uuid')->nullable(); //TEMPORARY!!
             $table->boolean('processed')->default(false);
-            $table->string('url')->nullable();
+            $table->string('title')->nullable();
             $table->json('meta')->nullable();
             $table->timestamps();
         });

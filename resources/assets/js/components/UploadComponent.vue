@@ -1,13 +1,20 @@
 <template>
-	<div class="js-upload uk-placeholder uk-text-center uk-margin-remove">
-		<span v-if="!loading">
-			<span uk-icon="icon: cloud-upload"></span>
-			<span class="uk-text-middle">Drop CSV file here or</span>
-			<div uk-form-custom>
-				<input type="file" name="csv">
-				<span class="uk-link">select one</span>
-			</div>
-		</span>
+	<div>
+		<div class="js-upload uk-placeholder uk-text-center uk-margin-remove">
+			<span v-if="!loading">
+				<span uk-icon="icon: cloud-upload"></span>
+				<span class="uk-text-middle">Drop CSV file here or</span>
+				<div uk-form-custom>
+					<input type="file" name="csv">
+					<span class="uk-link">select one</span>
+				</div>
+			</span>
+		</div>
+		<ul class="uk-list uk-list-divider" v-if="files.length">
+			<li v-for="file in files" :class="file.error ? 'uk-text-danger' : ''">
+				{{ file.name }} {{ file.error }} <div uk-spinner v-if="file.loading"></div>
+			</li>
+		</ul>
 	</div>
 </template>
 
@@ -17,7 +24,8 @@
 			return {
 				el : {},
 				loading : false,
-				progress : {}
+				progress : {},
+				files : []
 			}
 		},
 		methods : {
@@ -55,7 +63,6 @@
 						UIkit.notification("Error uploading CSV ", {status: 'danger'});
 					},
 					complete: function (e) {
-						//console.log('complete', e);
 						
 						var message = 'Success';
 						
@@ -64,10 +71,14 @@
 							//console.log('response',response);
 							message = "<p>"+response.data.url+'</p>';
 							
-							UIkit.notification(message, {status: 'success'});
-						
-							self.$emit('processed', response);
+							//UIkit.notification(message, {status: 'success'});
+							console.log('complete', response,e);
+							
+							self.$emit('complete', response);
+							
+							self.files = [];
 						}
+						
 						
 					}
 
@@ -95,7 +106,11 @@
         mounted() {
 			this.init();
 			
+<<<<<<< HEAD
 			console.log('Parser.load',this);
+=======
+			console.log('Upload component mounted',self);
+>>>>>>> media_dev
         }
     }
 </script>

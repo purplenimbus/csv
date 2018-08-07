@@ -31,68 +31,77 @@ class NimbusWP
 	
 	public function process(Request $request,Upload $upload){
 		
-		$file = $request->file('files')[0];
-		
-		$self = $this;
-		
-		$res = [];
-		
-		$payload = [
-			'title' => $file->getClientOriginalName(),
-			'files' => $file,
-			'meta' => []
-		];
-		
-		if(Auth::user() && isset(Auth::user()->uuid)){
-			$payload['meta']['user_uuid'] = Auth::user()->uuid;
-		}	
-		
-		$options = [
-			'headers'	=>	[	
-				'Content-Disposition' => 'attachment; filename='.$file->getClientOriginalName(),
-				//'Content-type' => $file->getClientMimeType()
-			],
-			'form_params' => $payload
-			//'body' => file_get_contents($file->path())
-		];
-		
-		//var_dump($file->getClientMimeType());
-		
-		$response = $self->API('POST','media',$options);
-					
-		if($response->getStatusCode() === 200 || $response->getStatusCode() === 201){
+		try{
+			$file = $request->file('files')[0];
 			
-			$upload->processed = true;
+			$self = $this;
 			
-			$payload = json_decode($response->getBody()->getContents());
-						
-			$upload->url = $payload->guid->rendered;
+			$res = [];
 			
-			$upload->meta = [
-				'wpId' => $payload->id
+			$payload = [
+				'title' => $file->getClientOriginalName(),
+				'files' => fopen($file->path(), 'r'),
+				'meta' => []
 			];
 			
-			if(Auth::user()->uuid){
-				$upload->user_uuid = Auth::user()->uuid; //move to middelware or model?
+			if(Auth::user() && isset(Auth::user()->uuid)){
+				$payload['meta']['user_uuid'] = Auth::user()->uuid;
+			}	
+			
+			$options = [
+				'multipart' => [
+					[
+						'name'     => 'media',
+						'contents' => 'data',
+						'headers'  => ['Content-Disposition' => 'form-data; filename='.$file->getClientOriginalName()]
+					],
+					[
+						'name'     => 'file',
+						'contents' => fopen($file->path(), 'r'),
+						'filename' => $file->getClientOriginalName()
+					]
+				]
+			];
+			
+			$response = $self->API('POST','media',$options);
+									
+			if($response->getStatusCode() === 200 || $response->getStatusCode() === 201){
+				
+				$upload->processed = true;
+				
+				$payload = json_decode($response->getBody()->getContents());
+										
+				$upload->meta = [
+					'wp_data' => $payload,
+				];
+				
+				if(Auth::user()->uuid){
+					$upload->user_uuid = Auth::user()->uuid; //move to middelware or model?
+				}
+				
+				$upload->save();
+				
+				if(Auth::user()->uuid){
+					Auth::user()->notify(new UploadProcessed($upload));
+				}
+							
+			$res['data'] = ['uuid' => $upload->uuid,'status' => 'processed','wp_data' => $upload->meta['wp_data']];
+				
+				 \Log::info('Processed '.$file->getClientOriginalName());
+				
+			}else{
+				
+				$res = ['message' => 'somethings wrong', 'errors' => $payload];
 			}
 			
-			$upload->save();
-			
-			if(Auth::user()->uuid){
-				Auth::user()->notify(new UploadProcessed($upload));
-			}
+			$res['status'] = $response->getStatusCode();
 						
-			$res['data'] = ['uuid' => $upload->uuid,'status' => 'processed','url' => $upload->url];
+			return $res;
+		}catch(Exception $e){
 			
-			 \Log::info('Processed '.$file->getClientOriginalName());
+			return ['status' => $response->getStatusCode(), 'message' => $e->getMessage() ];	
 			
-		}else{
-			$res = ['message' => 'somethings wrong', 'errors' => $response->getReasonPhrase()];
 		}
-		
-		$res['status'] = $response->getStatusCode();
-		
-		return $res;
 	}
 	
 	public function API($request_type,$endpoint,$opt){
@@ -105,15 +114,10 @@ class NimbusWP
 		$options = array( 	
 			'handler' => $stack, 
 			'auth' => 'oauth',
-			'exceptions ' =>  true,
+			'exceptions ' =>  false,
+			'http_errors' =>  false,
+			//'query' => [	'per_page' => 100	 ]
 		);
-				
-		if(isset($opt['headers'])){
-			foreach($opt['headers'] as $header_key => $header){
-				$stack->push($self->add_header($header_key,$header));
-			}
-			unset($opt['headers']);
-		}
 		
 		$options = array_merge($options,$opt);
 	
