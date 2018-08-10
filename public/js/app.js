@@ -55684,7 +55684,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				beforeAll: function beforeAll(e, files) {
 					//console.log('beforeAll file',files );
 					self.files = files;
-					//self.loading = true;
+					self.files[0].loading = true;
 					self.$emit('files', files);
 				},
 				progress: function progress(e) {
@@ -55695,7 +55695,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				},
 				error: function error() {
 					console.log('error', arguments);
-					self.loading = false;
+					self.files[0].loading = false;
 					self.files[0].error = true;
 					UIkit.notification("Error uploading CSV ", { status: 'danger' });
 				},
@@ -55704,11 +55704,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					var message = 'Success';
 
 					if (JSON.parse(e.response)) {
-						var response = JSON.parse(e.response);
-						//console.log('response',response);
-						message = "<p>" + response.data.url + '</p>';
+						var response = JSON.parse(e.response),
+						    url = response.data.wp_data.guid.rendered ? response.data.wp_data.guid.rendered : false,
+						    message = url ? "<p>" + url + '</p>' : '';
 
-						//UIkit.notification(message, {status: 'success'});
+						UIkit.notification(message, { status: 'success' });
+
 						console.log('complete', response, e);
 
 						self.$emit('complete', response);
