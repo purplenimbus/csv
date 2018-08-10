@@ -4,7 +4,7 @@
 <div class="">
 	<div class="uk-position-center">
 		<div uk-grid>
-			<div class="center-block">
+			<div class="center-block uk-width-medium">
 				<div class="uk-card uk-card-default">
 					<div class="uk-card-header">
 						<div class="uk-card-title uk-text-center">{{ __('Login') }}</div>
