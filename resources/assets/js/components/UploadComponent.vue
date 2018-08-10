@@ -62,7 +62,7 @@
 						console.log('error', arguments);
 						self.files[0].loading = false;
 						self.files[0].error = true;
-						UIkit.notification("Error uploading CSV ", {status: 'danger'});
+						UIkit.notification("Error uploading file", {status: 'danger'});
 					},
 					complete: function (e) {
 						
