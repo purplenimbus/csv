@@ -55672,6 +55672,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			self.Uikit = UIkit.upload('.js-upload', {
 				url: 'http://nimbus-media.herokuapp.com/upload',
 				multiple: false,
+				//mime : 'image/*',
 				beforeSend: function beforeSend(e) {
 					console.log('beforeSend file', e);
 
@@ -55682,37 +55683,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				beforeAll: function beforeAll(e, files) {
 					//console.log('beforeAll file',files );
 					self.files = files;
-					//self.loading = true;
+					self.files[0].loading = true;
 					self.$emit('files', files);
 				},
 				progress: function progress(e) {
-					//console.log('progress',e);
+					console.log('progress', e);
 
 					self.progress.total = e.total;
 					self.progress.loaded = e.loaded;
 				},
 				error: function error() {
 					console.log('error', arguments);
-					self.loading = false;
+					self.files[0].loading = false;
 					self.files[0].error = true;
 					UIkit.notification("Error uploading CSV ", { status: 'danger' });
 				},
 				complete: function complete(e) {
+					console.log('complete', e);
 
-					var message = 'Success';
+					var message = 'Success',
+					    resposne = false;
 
 					if (JSON.parse(e.response)) {
-						var response = JSON.parse(e.response);
-						//console.log('response',response);
-						message = "<p>" + response.data.url + '</p>';
-
-						//UIkit.notification(message, {status: 'success'});
-						console.log('complete', response, e);
-
-						self.$emit('complete', response);
-
-						self.files = [];
+						var response = JSON.parse(e.response),
+						    url = response.data.wp_data.guid.rendered ? response.data.wp_data.guid.rendered : false,
+						    message = url ? "<p>" + url + '</p>' : '';
 					}
+
+					self.$emit('complete', response);
+
+					UIkit.notification(message, { status: 'success' });
+
+					self.files = [];
 				}
 
 			});
@@ -55763,7 +55765,7 @@ var render = function() {
               _c("span", { attrs: { "uk-icon": "icon: cloud-upload" } }),
               _vm._v(" "),
               _c("span", { staticClass: "uk-text-middle" }, [
-                _vm._v("Drop CSV file here or")
+                _vm._v("Drop Image here or")
               ]),
               _vm._v(" "),
               _vm._m(0)
@@ -55772,7 +55774,7 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _vm.files.length
+    _vm.files.length && !_vm.loading
       ? _c(
           "ul",
           { staticClass: "uk-list uk-list-divider" },
@@ -55898,24 +55900,59 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
 			list: [],
 			files: [],
-			loading: true
+			loading: true,
+			typeFilterKey: 'all'
 		};
+	},
+	computed: {
+		typeFilter: function typeFilter() {
+			console.log('computed typeFilter', this.typeFilterKey, this[this.typeFilterKey]);
+			return this[this.typeFilterKey];
+		},
+		image: function image() {
+			return this.file.filter(function (file) {
+				return file.meta.wp_meta.mime_type === 'image/jpeg';
+			});
+		}
 	},
 	methods: {
 		init: function init() {
 			var self = this;
 			console.log('List component init , user id ' + self.$root.userId, self);
 
+			self.loading = true;
+
 			if (self.$root.userId) {
 				axios.get('/user/' + self.$root.userId + '/files').then(function (result) {
 					console.log('List component axios', result);
 					self.files = result.data;
+					self.loading = false;
+				}).catch(function () {
 					self.loading = false;
 				});
 			}
@@ -55939,7 +55976,7 @@ var render = function() {
     "section",
     {
       staticClass:
-        "uk-section uk-section-primary uk-height-viewport uk-padding-small"
+        "uk-section uk-section-default uk-height-viewport uk-padding-small"
     },
     [
       _c("div", { staticClass: "uk-grid-collapse", attrs: { "uk-grid": "" } }, [
@@ -55948,7 +55985,7 @@ var render = function() {
             _c(
               "fieldset",
               { staticClass: "uk-fieldset uk-width-1-1" },
-              [_c("upload-component", { on: { "complete:": _vm.init } })],
+              [_c("upload-component", { on: { complete: _vm.init } })],
               1
             )
           ]),
@@ -55960,25 +55997,118 @@ var render = function() {
               })
             : _vm._e(),
           _vm._v(" "),
-          _vm.files.length
+          _vm.files.length && !_vm.loading
             ? _c(
                 "ul",
                 { staticClass: "uk-list uk-list-divider" },
                 [
-                  _c("li", [_vm._v("Your Files")]),
+                  _c("li", { staticClass: "uk-clearfix uk-hidden" }, [
+                    _c("div", { staticClass: "uk-float-left" }, [
+                      _c(
+                        "ul",
+                        { staticClass: "uk-iconnav uk-padding-remove" },
+                        [
+                          _c("li", [
+                            _c("a", {
+                              class: { active: _vm.typeFilterKey == "image" },
+                              attrs: { "uk-icon": "icon: image" },
+                              on: {
+                                click: function($event) {
+                                  _vm.typeFilterKey = "image"
+                                }
+                              }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("li", [
+                            _c("a", {
+                              class: { active: _vm.typeFilterKey == "audio" },
+                              attrs: { "uk-icon": "icon: play" },
+                              on: {
+                                click: function($event) {
+                                  _vm.typeFilterKey = "audio"
+                                }
+                              }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("li", [
+                            _c("a", {
+                              class: {
+                                active: _vm.typeFilterKey == "document"
+                              },
+                              attrs: { "uk-icon": "icon: file" },
+                              on: {
+                                click: function($event) {
+                                  _vm.typeFilterKey = "document"
+                                }
+                              }
+                            })
+                          ])
+                        ]
+                      )
+                    ])
+                  ]),
                   _vm._v(" "),
                   _vm._l(_vm.files, function(file) {
                     return _c(
                       "li",
-                      { class: file.error ? "uk-text-danger" : "" },
+                      {
+                        staticClass: "uk-clearfix",
+                        class: file.error ? "uk-text-danger" : ""
+                      },
                       [
-                        _vm._v(
-                          "\n\t\t\t\t\t\t" +
-                            _vm._s(file.meta.wp_data.title.raw) +
-                            " " +
-                            _vm._s(file.error) +
-                            "\n\t\t\t\t\t"
-                        )
+                        _c("div", { staticClass: "uk-float-left" }, [
+                          _c("img", {
+                            staticClass: "uk-hidden",
+                            attrs: {
+                              src: file.meta.wp_data.guid.rendered,
+                              width: "50",
+                              height: "50"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "span",
+                            {
+                              staticClass: "uk-text-middle",
+                              attrs: { "uk-lightbox": "" }
+                            },
+                            [
+                              _c(
+                                "a",
+                                {
+                                  attrs: {
+                                    href: file.meta.wp_data.guid.rendered
+                                  }
+                                },
+                                [_vm._v(_vm._s(file.meta.wp_data.title.raw))]
+                              )
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("ul", { staticClass: "uk-iconnav uk-float-right" }, [
+                          _c("li", {}, [
+                            _c("span", { staticClass: "uk-label" }, [
+                              _vm._v(_vm._s(file.meta.wp_data.mime_type))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _vm._m(0, true),
+                          _vm._v(" "),
+                          _vm._m(1, true),
+                          _vm._v(" "),
+                          _vm._m(2, true),
+                          _vm._v(" "),
+                          file.error
+                            ? _c("li", { staticClass: "uk-hidden" }, [
+                                _c("a", {
+                                  attrs: { href: "#", "uk-icon": "icon: trash" }
+                                })
+                              ])
+                            : _vm._e()
+                        ])
                       ]
                     )
                   })
@@ -55991,7 +56121,32 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "uk-hidden" }, [
+      _c("a", { attrs: { href: "#", "uk-icon": "icon: download" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "uk-hidden" }, [
+      _c("a", { attrs: { href: "#", "uk-icon": "icon: link" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "uk-hidden" }, [
+      _c("a", { attrs: { href: "#", "uk-icon": "icon: trash" } })
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

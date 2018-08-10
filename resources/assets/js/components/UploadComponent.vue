@@ -3,14 +3,14 @@
 		<div class="js-upload uk-placeholder uk-text-center uk-margin-remove">
 			<span v-if="!loading">
 				<span uk-icon="icon: cloud-upload"></span>
-				<span class="uk-text-middle">Drop CSV file here or</span>
+				<span class="uk-text-middle">Drop Image here or</span>
 				<div uk-form-custom>
 					<input type="file" name="csv">
 					<span class="uk-link">select one</span>
 				</div>
 			</span>
 		</div>
-		<ul class="uk-list uk-list-divider" v-if="files.length">
+		<ul class="uk-list uk-list-divider" v-if="files.length && !loading">
 			<li v-for="file in files" :class="file.error ? 'uk-text-danger' : ''">
 				{{ file.name }} {{ file.error }} <div uk-spinner v-if="file.loading"></div>
 			</li>
@@ -35,6 +35,7 @@
 				self.Uikit = UIkit.upload('.js-upload', {
 					url: 'http://nimbus-media.herokuapp.com/upload',
 					multiple: false,
+					//mime : 'image/*',
 					beforeSend: function (e) {
 						console.log('beforeSend file',e);
 						
@@ -46,40 +47,40 @@
 					beforeAll: function (e,files) {
 						//console.log('beforeAll file',files );
 						self.files = files;
-						//self.loading = true;
+						self.files[0].loading = true;
 						self.$emit('files', files);
 
 					},
 					progress: function (e) {
-						//console.log('progress',e);
+						console.log('progress',e);
 						
 						self.progress.total = e.total;
 						self.progress.loaded = e.loaded;
 					},
 					error: function () {
 						console.log('error', arguments);
-						self.loading = false;
+						self.files[0].loading = false;
 						self.files[0].error = true;
 						UIkit.notification("Error uploading CSV ", {status: 'danger'});
 					},
 					complete: function (e) {
-						
-						var message = 'Success';
+						console.log('complete',e);
+
+						var message = 'Success',
+							resposne = false;
 						
 						if(JSON.parse(e.response)){
-							var response = JSON.parse(e.response);
-							//console.log('response',response);
-							message = "<p>"+response.data.url+'</p>';
-							
-							//UIkit.notification(message, {status: 'success'});
-							console.log('complete', response,e);
-							
-							self.$emit('complete', response);
-							
-							self.files = [];
+							var response = JSON.parse(e.response),
+								url = response.data.wp_data.guid.rendered ? response.data.wp_data.guid.rendered : false,
+								message = url ? "<p>"+url+'</p>' : '';
+																																				
 						}
 						
+						self.$emit('complete', response);
 						
+						UIkit.notification(message, {status: 'success' });
+						
+						self.files = [];
 					}
 
 				});
