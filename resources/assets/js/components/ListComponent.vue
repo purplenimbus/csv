@@ -23,8 +23,10 @@
 						<div class="uk-float-left">
 							<img :src="file.meta.wp_data.guid.rendered" width="50" height="50" class="uk-hidden">
 							<span class="uk-text-middle" uk-lightbox><a :href="file.meta.wp_data.guid.rendered">{{ file.meta.wp_data.title.raw }}</a></span>
+							
 						</div>
 						<ul class="uk-iconnav uk-float-right">
+							<li class=""><span class="uk-label">{{ file.meta.wp_data.mime_type }}</span></li>
 							<li class="uk-hidden"><a href="#" uk-icon="icon: download"></a></li>
 							<li class="uk-hidden"><a href="#" uk-icon="icon: link"></a></li>
 							<li class="uk-hidden"><a href="#" uk-icon="icon: trash"></a></li>

@@ -55920,6 +55920,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -56090,6 +56092,12 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("ul", { staticClass: "uk-iconnav uk-float-right" }, [
+                          _c("li", {}, [
+                            _c("span", { staticClass: "uk-label" }, [
+                              _vm._v(_vm._s(file.meta.wp_data.mime_type))
+                            ])
+                          ]),
+                          _vm._v(" "),
                           _vm._m(0, true),
                           _vm._v(" "),
                           _vm._m(1, true),
