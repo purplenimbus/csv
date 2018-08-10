@@ -29,18 +29,22 @@ class NimbusWP
 		$this->wordpress_url = $url;
 	}
 	
+	//public function process(String $file_path,String $filename,Upload $upload){
 	public function process(Request $request,Upload $upload){
 		
 		try{
-			$file = $request->file('files')[0];
 			
 			$self = $this;
+			
+			$file = $request->file('files')[0];
+			$file_path = $file->path();
+			$file_name = $file->getClientOriginalName();
 			
 			$res = [];
 			
 			$payload = [
-				'title' => $file->getClientOriginalName(),
-				'files' => fopen($file->path(), 'r'),
+				'title' => $file_name,
+				'files' => fopen($file_path, 'r'),
 				'meta' => []
 			];
 			
@@ -53,12 +57,12 @@ class NimbusWP
 					[
 						'name'     => 'media',
 						'contents' => 'data',
-						'headers'  => ['Content-Disposition' => 'form-data; filename='.$file->getClientOriginalName()]
+						'headers'  => ['Content-Disposition' => 'form-data; filename='.$file_name]
 					],
 					[
 						'name'     => 'file',
-						'contents' => fopen($file->path(), 'r'),
-						'filename' => $file->getClientOriginalName()
+						'contents' => fopen($file_path, 'r'),
+						'filename' => $file_name
 					]
 				]
 			];
@@ -87,7 +91,7 @@ class NimbusWP
 							
 			$res['data'] = ['uuid' => $upload->uuid,'status' => 'processed','wp_data' => $upload->meta['wp_data']];
 				
-				 \Log::info('Processed '.$file->getClientOriginalName());
+				 \Log::info('Processed '.$file_name);
 				
 			}else{
 				

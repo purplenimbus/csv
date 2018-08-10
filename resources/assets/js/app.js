@@ -18,6 +18,7 @@ window.Vue = require('vue');
 Vue.component('list-component', require('./components/ListComponent.vue'));
 Vue.component('parser-component', require('./components/ParserComponent.vue'));
 Vue.component('upload-component', require('./components/UploadComponent.vue'));
+Vue.component('modal-component', require('./components/ModalComponent.vue'));
 
 const app = new Vue({
     el: '#app',

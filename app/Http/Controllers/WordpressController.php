@@ -10,35 +10,35 @@ use Illuminate\Http\Request;
 
 use App\Upload;
 use App\Notifications\UploadProcessed;
-use App\NimbusWP;
-
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\CurlHandler;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 use Illuminate\Support\Facades\Auth;
+
+use App\Jobs\ProcessUpload;
+use App\NimbusWP;
 
 class WordpressController extends Controller
 {
 	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 	
-	var $http;
-	var $wordpress_url;
-	var $guzzle;
 	var $api;
 	
 	function __construct(){
-		$this->guzzle = new GuzzleClient();
 		$this->api = new NimbusWP(env('NIMBUS_MEDIA_API_ENPOINT'));
 	}
 	
-	
 	public function processFile(Request $request){
 		try{
-			//validate file?			
-			$res = $this->api->process($request,new Upload);
+			//validate file?	
 
+			//$file = $request->file('files')[0];
+			
+			//ProcessUpload::dispatch($file->path(),$file->getClientOriginalName());
+			
+			//$res = ['status'];
+			
+			$res = $this->api->process($request,new Upload);
+			
+			//var_dump($res);
 			return response()->json($res,$res['status']);
 			
 		}catch(Exception $e){
@@ -50,7 +50,7 @@ class WordpressController extends Controller
 		try{
 			//validate request?
 			
-			$images = Upload::with('user')->where(['user_uuid' => $uuid])->latest()->get();
+			$images = Upload::with('user')->where(['user_uuid' => $uuid])->latest()->paginate(10);
 
 			return response()->json($images,200);
 			

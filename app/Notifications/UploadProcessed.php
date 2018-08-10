@@ -44,7 +44,7 @@ class UploadProcessed extends Notification implements ShouldBroadcast
     {
         return [
             'uuid' => $this->upload->uuid,
-            'url' => $this->upload->url
+            'meta' => $this->upload->meta
         ];
     }
 	
@@ -58,7 +58,7 @@ class UploadProcessed extends Notification implements ShouldBroadcast
 	{
 		return new BroadcastMessage([
             'uuid' => $this->upload->uuid,
-            'url' => $this->upload->url
+            'meta' => $this->upload->meta
         ]);
 	}
 	
@@ -85,7 +85,7 @@ class UploadProcessed extends Notification implements ShouldBroadcast
     {
         return [
             'uuid' => $this->upload->uuid,
-            'url' => $this->upload->url
+            'meta' => $this->upload->meta
         ];
     }
 }
