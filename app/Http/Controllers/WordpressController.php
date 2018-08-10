@@ -50,7 +50,7 @@ class WordpressController extends Controller
 		try{
 			//validate request?
 			
-			$images = Upload::with('user')->where(['user_uuid' => $uuid])->get();
+			$images = Upload::with('user')->where(['user_uuid' => $uuid])->latest()->get();
 
 			return response()->json($images,200);
 			

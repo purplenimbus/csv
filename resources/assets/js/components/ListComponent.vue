@@ -4,12 +4,12 @@
 			<div class="uk-width-1-1">
 				<form id="parser">
 					<fieldset class="uk-fieldset uk-width-1-1">
-						<upload-component v-on:complete:="init"></upload-component>
+						<upload-component v-on:complete="init"></upload-component>
 					</fieldset>
 				</form>
 				
 				<div uk-spinner v-if="loading" class="uk-text-center uk-width-1-1 uk-margin"></div>
-				<ul class="uk-list uk-list-divider" v-if="files.length">
+				<ul class="uk-list uk-list-divider" v-if="files.length && !loading">
 					<li class="uk-clearfix uk-hidden">
 						<div class="uk-float-left">
 							<ul class="uk-iconnav uk-padding-remove">
@@ -60,7 +60,9 @@
 			init(){
 				var self = this;
 				console.log('List component init , user id '+self.$root.userId,self);	
-								
+				
+				self.loading = true;
+				
 				if(self.$root.userId){
 					axios.get('/user/'+self.$root.userId+'/files').then(function(result){
 						console.log('List component axios',result);	

@@ -55674,6 +55674,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 				url: 'http://localhost:8000/upload',
 				multiple: false,
+				//mime : 'image/*',
 				beforeSend: function beforeSend(e) {
 					console.log('beforeSend file', e);
 
@@ -55701,6 +55702,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				},
 				complete: function complete(e) {
 
+					console.log('complete', e);
+
 					var message = 'Success',
 					    resposne = false;
 
@@ -55708,12 +55711,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 						var response = JSON.parse(e.response),
 						    url = response.data.wp_data.guid.rendered ? response.data.wp_data.guid.rendered : false,
 						    message = url ? "<p>" + url + '</p>' : '';
-
-						//UIkit.notification(message, {status: 'success' });
-
-						console.log('complete', response, e);
-
-						//self.$emit('complete', response);
 					}
 
 					self.$emit('complete', response);
@@ -55771,7 +55768,7 @@ var render = function() {
               _c("span", { attrs: { "uk-icon": "icon: cloud-upload" } }),
               _vm._v(" "),
               _c("span", { staticClass: "uk-text-middle" }, [
-                _vm._v("Drop CSV file here or")
+                _vm._v("Drop Image here or")
               ]),
               _vm._v(" "),
               _vm._m(0)
@@ -55780,7 +55777,7 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _vm.files.length
+    _vm.files.length && !_vm.loading
       ? _c(
           "ul",
           { staticClass: "uk-list uk-list-divider" },
@@ -55949,6 +55946,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var self = this;
 			console.log('List component init , user id ' + self.$root.userId, self);
 
+			self.loading = true;
+
 			if (self.$root.userId) {
 				axios.get('/user/' + self.$root.userId + '/files').then(function (result) {
 					console.log('List component axios', result);
@@ -55987,7 +55986,7 @@ var render = function() {
             _c(
               "fieldset",
               { staticClass: "uk-fieldset uk-width-1-1" },
-              [_c("upload-component", { on: { "complete:": _vm.init } })],
+              [_c("upload-component", { on: { complete: _vm.init } })],
               1
             )
           ]),
@@ -55999,7 +55998,7 @@ var render = function() {
               })
             : _vm._e(),
           _vm._v(" "),
-          _vm.files.length
+          _vm.files.length && !_vm.loading
             ? _c(
                 "ul",
                 { staticClass: "uk-list uk-list-divider" },

@@ -3,14 +3,14 @@
 		<div class="js-upload uk-placeholder uk-text-center uk-margin-remove">
 			<span v-if="!loading">
 				<span uk-icon="icon: cloud-upload"></span>
-				<span class="uk-text-middle">Drop CSV file here or</span>
+				<span class="uk-text-middle">Drop Image here or</span>
 				<div uk-form-custom>
 					<input type="file" name="csv">
 					<span class="uk-link">select one</span>
 				</div>
 			</span>
 		</div>
-		<ul class="uk-list uk-list-divider" v-if="files.length">
+		<ul class="uk-list uk-list-divider" v-if="files.length && !loading">
 			<li v-for="file in files" :class="file.error ? 'uk-text-danger' : ''">
 				{{ file.name }} {{ file.error }} <div uk-spinner v-if="file.loading"></div>
 			</li>
@@ -36,6 +36,7 @@
 
 					url: 'http://localhost:8000/upload',
 					multiple: false,
+					//mime : 'image/*',
 					beforeSend: function (e) {
 						console.log('beforeSend file',e);
 						
@@ -65,7 +66,8 @@
 					},
 					complete: function (e) {
 						
-						
+						console.log('complete',e);
+
 						var message = 'Success',
 							resposne = false;
 						
@@ -73,13 +75,7 @@
 							var response = JSON.parse(e.response),
 								url = response.data.wp_data.guid.rendered ? response.data.wp_data.guid.rendered : false,
 								message = url ? "<p>"+url+'</p>' : '';
-															
-							//UIkit.notification(message, {status: 'success' });
-							
-							console.log('complete', response,e);
-							
-							//self.$emit('complete', response);
-							
+																																				
 						}
 						
 						self.$emit('complete', response);
