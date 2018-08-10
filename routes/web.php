@@ -11,13 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
-
 Auth::routes();
+Route::get('/logout' , 'Auth\LoginController@logout'); //logout hack
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 Route::post('upload','WordpressController@processFile');
 Route::get('/user/{uuid}/files', 'WordpressController@getFiles')->name('files');
 

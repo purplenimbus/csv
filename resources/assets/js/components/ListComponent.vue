@@ -1,5 +1,5 @@
 <template>
-    <section class="uk-section uk-section-primary uk-height-viewport uk-padding-small">
+    <section class="uk-section uk-section-default uk-height-viewport uk-padding-small">
 		<div class="uk-grid-collapse" uk-grid>
 			<div class="uk-width-1-1">
 				<form id="parser">
@@ -10,7 +10,7 @@
 				
 				<div uk-spinner v-if="loading" class="uk-text-center uk-width-1-1 uk-margin"></div>
 				<ul class="uk-list uk-list-divider" v-if="files.length">
-					<li class="uk-clearfix">
+					<li class="uk-clearfix uk-hidden">
 						<div class="uk-float-left">
 							<ul class="uk-iconnav uk-padding-remove">
 								<li><a v-on:click="typeFilterKey = 'image'"  :class="{ active: typeFilterKey == 'image' }" uk-icon="icon: image"></a></li>
@@ -65,6 +65,8 @@
 					axios.get('/user/'+self.$root.userId+'/files').then(function(result){
 						console.log('List component axios',result);	
 						self.files = result.data;
+						self.loading = false;
+					}).catch(function(){
 						self.loading = false;
 					});
 				}

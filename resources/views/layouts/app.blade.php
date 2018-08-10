@@ -20,7 +20,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+<body class="">
 	@auth
     <div id="app" user-id="{{ Auth::user()->uuid }}">
 	@endauth
@@ -28,45 +28,47 @@
 	@guest
 	<div id="app">	
 	@endguest
-		<nav class="uk-navbar-container" uk-navbar>
-			<div class="uk-navbar-left">
-				<a class="uk-navbar-item uk-logo" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-			</div>
-			<div class="uk-navbar-right uk-hidden">
-				<ul class="uk-navbar-nav">
-					@guest
-						<li>
-							<a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-						</li>
-						<li>
-							<a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-						</li>
-					@else
-						<li>
-							<a href="#">{{ Auth::user()->name }} <span class="caret"></span></a>
-							<div class="uk-navbar-dropdown">
-								<ul class="uk-nav uk-navbar-dropdown-nav">
-									<li class="uk-active">
-										<a href="#" href="{{ route('logout') }}"
-											onclick="event.preventDefault();
-												 document.getElementById('logout-form').submit();">
-											{{ __('Logout') }}</a>
-									</li>
-									<li>
-										<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-											@csrf
-										</form>
-									</li>
-								</ul>
-							</div>
-						</li>
-					@endguest
-				</ul>
-			</div>
-		</nav>
-		
+		<div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky">
+			<nav class="uk-navbar-container" uk-navbar>
+				<div class="uk-navbar-left">
+					<a class="uk-navbar-item uk-logo" href="{{ url('/') }}">
+						{{ config('app.name', 'Laravel') }}
+					</a>
+				</div>
+				<div class="uk-navbar-right">
+					<ul class="uk-navbar-nav">
+						@guest
+							<li>
+								<a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+							</li>
+							<li class="uk-hidden">
+								<a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+							</li>
+						@else
+							<li>
+								<a href="{{ url('/logout') }}">Logout</a>
+								<a href="#" class="uk-hidden">{{ Auth::user()->name }} <span class="caret"></span></a>
+								<div class="uk-navbar-dropdown">
+									<ul class="uk-nav uk-navbar-dropdown-nav">
+										<li class="uk-active">
+											<a href="{{ route('logout') }}"
+												onclick="event.preventDefault();
+													 document.getElementById('logout-form').submit();">
+												{{ __('Logout') }}</a>
+										</li>
+										<li>
+											<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+												@csrf
+											</form>
+										</li>
+									</ul>
+								</div>
+							</li>
+						@endguest
+					</ul>
+				</div>
+			</nav>
+		</div>
 		<main class="uk-section uk-section-default uk-padding-remove uk-height-viewport">
 			@yield('content')
 		</main>

@@ -55688,7 +55688,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					self.$emit('files', files);
 				},
 				progress: function progress(e) {
-					//console.log('progress',e);
+					console.log('progress', e);
 
 					self.progress.total = e.total;
 					self.progress.loaded = e.loaded;
@@ -55948,6 +55948,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					console.log('List component axios', result);
 					self.files = result.data;
 					self.loading = false;
+				}).catch(function () {
+					self.loading = false;
 				});
 			}
 		}
@@ -55970,7 +55972,7 @@ var render = function() {
     "section",
     {
       staticClass:
-        "uk-section uk-section-primary uk-height-viewport uk-padding-small"
+        "uk-section uk-section-default uk-height-viewport uk-padding-small"
     },
     [
       _c("div", { staticClass: "uk-grid-collapse", attrs: { "uk-grid": "" } }, [
@@ -55996,7 +55998,7 @@ var render = function() {
                 "ul",
                 { staticClass: "uk-list uk-list-divider" },
                 [
-                  _c("li", { staticClass: "uk-clearfix" }, [
+                  _c("li", { staticClass: "uk-clearfix uk-hidden" }, [
                     _c("div", { staticClass: "uk-float-left" }, [
                       _c(
                         "ul",

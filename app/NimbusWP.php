@@ -108,9 +108,7 @@ class NimbusWP
 		$url = $this->wordpress_url.$endpoint;
 		
 		$stack = $this->handler(env('NIMBUS_MEDIA_CLIENT_KEY'),env('NIMBUS_MEDIA_CLIENT_SECRET'),'6QMpkC0zqR65dvsuPCGsWuRmNpRHATabu0dqQThQ2wdpzIy1',env('NIMBUS_MEDIA_OAUTH_TOKEN'));
-		
-		$self = $this;
-		
+				
 		$options = array( 	
 			'handler' => $stack, 
 			'auth' => 'oauth',
@@ -120,14 +118,12 @@ class NimbusWP
 		);		
 		
 		$options = array_merge($options,$opt);
-
 				
 		return $this->guzzle->request($request_type,$url,$options);
 				
 	}
 	
-	private function add_header($header, $value)
-	{
+	private function add_header($header, $value){
 		return function (callable $handler) use ($header, $value) {
 			return function (
 				RequestInterface $request,

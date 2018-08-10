@@ -52,7 +52,7 @@
 
 					},
 					progress: function (e) {
-						//console.log('progress',e);
+						console.log('progress',e);
 						
 						self.progress.total = e.total;
 						self.progress.loaded = e.loaded;
