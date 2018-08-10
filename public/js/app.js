@@ -55701,21 +55701,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				},
 				complete: function complete(e) {
 
-					var message = 'Success';
+					var message = 'Success',
+					    resposne = false;
 
 					if (JSON.parse(e.response)) {
 						var response = JSON.parse(e.response),
 						    url = response.data.wp_data.guid.rendered ? response.data.wp_data.guid.rendered : false,
 						    message = url ? "<p>" + url + '</p>' : '';
 
-						UIkit.notification(message, { status: 'success' });
+						//UIkit.notification(message, {status: 'success' });
 
 						console.log('complete', response, e);
 
-						self.$emit('complete', response);
-
-						self.files = [];
+						//self.$emit('complete', response);
 					}
+
+					self.$emit('complete', response);
+
+					UIkit.notification(message, { status: 'success' });
+
+					self.files = [];
 				}
 
 			});
