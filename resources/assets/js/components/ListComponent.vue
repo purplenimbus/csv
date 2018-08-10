@@ -34,7 +34,7 @@
 						</ul>
 					</li>
 				</ul>
-				<button v-on:click="load()" class="uk-button uk-button-default uk-width-1-1" v-if="!lastPage">
+				<button v-on:click="load()" class="uk-button uk-button-default uk-width-1-1" v-if="!lastPage && !loading">
 					<span>Load More</span>
 					<div uk-spinner v-if="loadingPaginate"></div>
 				</button>
@@ -79,7 +79,7 @@
 				
 				if(self.$root.userId){
 					axios.get('/user/'+self.$root.userId+'/files?page='+self.currentPage).then(function(result){
-						console.log('List component axios',self.currentPage,result.data.last_page);	
+						console.log('files',result);
 						if(self.files.length){
 							self.files = self.files.concat(result.data.data);
 							self.loadingPaginate = false;							

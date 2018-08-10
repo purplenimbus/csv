@@ -69,18 +69,17 @@
 						console.log('complete',e);
 
 						var message = 'Success',
-							resposne = false;
+							response = false;
 						
 						if(JSON.parse(e.response)){
 							var response = JSON.parse(e.response),
-								url = response.data.wp_data.guid.rendered ? response.data.wp_data.guid.rendered : false,
-								message = url ? "<p>"+url+'</p>' : '';
+								message = response.message ? '<p>'+response.message+'</p>' : '';
 																																				
 						}
 						
 						self.$emit('complete', response);
 						
-						UIkit.notification(message, {status: 'success' });
+						UIkit.notification(message, {status: e.status === 200 ? 'success' : 'primary' });
 						
 						self.files = [];
 					}

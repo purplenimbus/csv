@@ -55486,7 +55486,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			if (self.$root.userId) {
 				axios.get('/user/' + self.$root.userId + '/files?page=' + self.currentPage).then(function (result) {
-					console.log('List component axios', self.currentPage, result.data.last_page);
+					console.log('files', result);
 					if (self.files.length) {
 						self.files = self.files.concat(result.data.data);
 						self.loadingPaginate = false;
@@ -55671,7 +55671,7 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          !_vm.lastPage
+          !_vm.lastPage && !_vm.loading
             ? _c(
                 "button",
                 {
@@ -56087,17 +56087,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					console.log('complete', e);
 
 					var message = 'Success',
-					    resposne = false;
+					    response = false;
 
 					if (JSON.parse(e.response)) {
 						var response = JSON.parse(e.response),
-						    url = response.data.wp_data.guid.rendered ? response.data.wp_data.guid.rendered : false,
-						    message = url ? "<p>" + url + '</p>' : '';
+						    message = response.message ? '<p>' + response.message + '</p>' : '';
 					}
 
 					self.$emit('complete', response);
 
-					UIkit.notification(message, { status: 'success' });
+					UIkit.notification(message, { status: e.status === 200 ? 'success' : 'primary' });
 
 					self.files = [];
 				}

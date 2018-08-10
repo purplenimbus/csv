@@ -30,15 +30,14 @@ class WordpressController extends Controller
 		try{
 			//validate file?	
 
-			//$file = $request->file('files')[0];
+			/*$file = $request->file('files')[0];
 			
-			//ProcessUpload::dispatch($file->path(),$file->getClientOriginalName());
+			ProcessUpload::dispatch($file->path(),$file->getClientOriginalName());
 			
-			//$res = ['status'];
+			$res = ['message' => 'processing','status' => 200];*/
+									
+			$res = $this->api->process($request);
 			
-			$res = $this->api->process($request,new Upload);
-			
-			//var_dump($res);
 			return response()->json($res,$res['status']);
 			
 		}catch(Exception $e){

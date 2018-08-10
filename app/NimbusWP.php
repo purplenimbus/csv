@@ -23,14 +23,16 @@ class NimbusWP
 	var $http;
 	var $wordpress_url;
 	var $guzzle;
+	var $upload;
 	
 	function __construct($url=''){
 		$this->guzzle = new GuzzleClient();
 		$this->wordpress_url = $url;
+		$this->upload = new Upload;
 	}
 	
-	//public function process(String $file_path,String $filename,Upload $upload){
-	public function process(Request $request,Upload $upload){
+	//public function process(String $file_path,String $file_name){
+	public function process(Request $request){
 		
 		try{
 			
@@ -71,25 +73,25 @@ class NimbusWP
 									
 			if($response->getStatusCode() === 200 || $response->getStatusCode() === 201){
 				
-				$upload->processed = true;
+				$this->upload->processed = true;
 				
 				$payload = json_decode($response->getBody()->getContents());
 										
-				$upload->meta = [
+				$this->upload->meta = [
 					'wp_data' => $payload,
 				];
 				
 				if(Auth::user()->uuid){
-					$upload->user_uuid = Auth::user()->uuid; //move to middelware or model?
+					$this->upload->user_uuid = Auth::user()->uuid; //move to middelware or model?
 				}
 				
-				$upload->save();
+				$this->upload->save();
 				
 				if(Auth::user()->uuid){
-					Auth::user()->notify(new UploadProcessed($upload));
+					Auth::user()->notify(new UploadProcessed($this->upload));
 				}
 							
-			$res['data'] = ['uuid' => $upload->uuid,'status' => 'processed','wp_data' => $upload->meta['wp_data']];
+			$res['data'] = ['uuid' => $this->upload->uuid,'status' => 'processed','wp_data' => $this->upload->meta['wp_data']];
 				
 				 \Log::info('Processed '.$file_name);
 				
