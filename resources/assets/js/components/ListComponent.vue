@@ -25,7 +25,7 @@
 							<span class="uk-text-middle" uk-lightbox><a :href="file.meta.wp_data.guid.rendered">{{ file.meta.wp_data.title.raw }}</a></span>
 							
 						</div>
-						<ul class="uk-iconnav uk-float-right">
+						<ul class="uk-iconnav uk-float-right uk-margin-remove">
 							<li class=""><span class="uk-label">{{ file.meta.wp_data.mime_type }}</span></li>
 							<li class="uk-hidden"><a href="#" uk-icon="icon: download"></a></li>
 							<li class="uk-hidden"><a href="#" uk-icon="icon: link"></a></li>
@@ -34,6 +34,10 @@
 						</ul>
 					</li>
 				</ul>
+				<button v-on:click="load()" class="uk-button uk-button-default uk-width-1-1" v-if="!lastPage && !loading">
+					<span>Load More</span>
+					<div uk-spinner v-if="loadingPaginate"></div>
+				</button>
 			</div>
 		</div>
 	</section>
@@ -46,7 +50,10 @@
 				list : [],
 				files : [],
 				loading : true,
-				typeFilterKey :'all'
+				typeFilterKey :'all',
+				currentPage:1,
+				loadingPaginate:false,
+				lastPage:false
 			}
 		},
 		computed : {
@@ -59,17 +66,30 @@
 			}
 		},
 		methods : {
+			load(){
+				this.loadingPaginate = true;
+				this.currentPage++;
+				this.init();
+			},
 			init(){
 				var self = this;
-				console.log('List component init , user id '+self.$root.userId,self);	
+				console.log('List component init' ,self.currentPage);	
 				
-				self.loading = true;
+				self.loading = !self.files.length ? true : false;
 				
 				if(self.$root.userId){
-					axios.get('/user/'+self.$root.userId+'/files').then(function(result){
-						console.log('List component axios',result);	
-						self.files = result.data;
+					axios.get('/user/'+self.$root.userId+'/files?page='+self.currentPage).then(function(result){
+						console.log('files',result);
+						if(self.files.length){
+							self.files = self.files.concat(result.data.data);
+							self.loadingPaginate = false;							
+						}else{
+							self.files = result.data.data;
+						}
+						
+						self.lastPage = result.data.last_page === self.currentPage ? true : false;
 						self.loading = false;
+						
 					}).catch(function(){
 						self.loading = false;
 					});

@@ -1173,6 +1173,7 @@ window.Vue = __webpack_require__(40);
 Vue.component('list-component', __webpack_require__(41));
 Vue.component('parser-component', __webpack_require__(44));
 Vue.component('upload-component', __webpack_require__(47));
+Vue.component('modal-component', __webpack_require__(50));
 
 var app = new Vue({
   el: '#app',
@@ -55442,6 +55443,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
@@ -55449,7 +55454,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			list: [],
 			files: [],
 			loading: true,
-			typeFilterKey: 'all'
+			typeFilterKey: 'all',
+			currentPage: 1,
+			loadingPaginate: false,
+			lastPage: false
 		};
 	},
 	computed: {
@@ -55464,16 +55472,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		}
 	},
 	methods: {
+		load: function load() {
+			this.loadingPaginate = true;
+			this.currentPage++;
+			this.init();
+		},
 		init: function init() {
 			var self = this;
-			console.log('List component init , user id ' + self.$root.userId, self);
+			console.log('List component init', self.currentPage);
 
-			self.loading = true;
+			self.loading = !self.files.length ? true : false;
 
 			if (self.$root.userId) {
-				axios.get('/user/' + self.$root.userId + '/files').then(function (result) {
-					console.log('List component axios', result);
-					self.files = result.data;
+				axios.get('/user/' + self.$root.userId + '/files?page=' + self.currentPage).then(function (result) {
+					console.log('files', result);
+					if (self.files.length) {
+						self.files = self.files.concat(result.data.data);
+						self.loadingPaginate = false;
+					} else {
+						self.files = result.data.data;
+					}
+
+					self.lastPage = result.data.last_page === self.currentPage ? true : false;
 					self.loading = false;
 				}).catch(function () {
 					self.loading = false;
@@ -55611,32 +55631,63 @@ var render = function() {
                           )
                         ]),
                         _vm._v(" "),
-                        _c("ul", { staticClass: "uk-iconnav uk-float-right" }, [
-                          _c("li", {}, [
-                            _c("span", { staticClass: "uk-label" }, [
-                              _vm._v(_vm._s(file.meta.wp_data.mime_type))
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _vm._m(0, true),
-                          _vm._v(" "),
-                          _vm._m(1, true),
-                          _vm._v(" "),
-                          _vm._m(2, true),
-                          _vm._v(" "),
-                          file.error
-                            ? _c("li", { staticClass: "uk-hidden" }, [
-                                _c("a", {
-                                  attrs: { href: "#", "uk-icon": "icon: trash" }
-                                })
+                        _c(
+                          "ul",
+                          {
+                            staticClass:
+                              "uk-iconnav uk-float-right uk-margin-remove"
+                          },
+                          [
+                            _c("li", {}, [
+                              _c("span", { staticClass: "uk-label" }, [
+                                _vm._v(_vm._s(file.meta.wp_data.mime_type))
                               ])
-                            : _vm._e()
-                        ])
+                            ]),
+                            _vm._v(" "),
+                            _vm._m(0, true),
+                            _vm._v(" "),
+                            _vm._m(1, true),
+                            _vm._v(" "),
+                            _vm._m(2, true),
+                            _vm._v(" "),
+                            file.error
+                              ? _c("li", { staticClass: "uk-hidden" }, [
+                                  _c("a", {
+                                    attrs: {
+                                      href: "#",
+                                      "uk-icon": "icon: trash"
+                                    }
+                                  })
+                                ])
+                              : _vm._e()
+                          ]
+                        )
                       ]
                     )
                   })
                 ],
                 2
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          !_vm.lastPage && !_vm.loading
+            ? _c(
+                "button",
+                {
+                  staticClass: "uk-button uk-button-default uk-width-1-1",
+                  on: {
+                    click: function($event) {
+                      _vm.load()
+                    }
+                  }
+                },
+                [
+                  _c("span", [_vm._v("Load More")]),
+                  _vm._v(" "),
+                  _vm.loadingPaginate
+                    ? _c("div", { attrs: { "uk-spinner": "" } })
+                    : _vm._e()
+                ]
               )
             : _vm._e()
         ])
@@ -56033,17 +56084,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					console.log('complete', e);
 
 					var message = 'Success',
-					    resposne = false;
+					    response = false;
 
 					if (JSON.parse(e.response)) {
 						var response = JSON.parse(e.response),
-						    url = response.data.wp_data.guid.rendered ? response.data.wp_data.guid.rendered : false,
-						    message = url ? "<p>" + url + '</p>' : '';
+						    message = response.message ? '<p>' + response.message + '</p>' : '';
 					}
 
 					self.$emit('complete', response);
 
-					UIkit.notification(message, { status: 'success' });
+					UIkit.notification(message, { status: e.status === 200 ? 'success' : 'primary' });
 
 					self.files = [];
 				}
@@ -56145,9 +56195,106 @@ if (false) {
 }
 
 /***/ }),
-/* 50 */,
-/* 51 */,
-/* 52 */,
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(51)
+/* template */
+var __vue_template__ = __webpack_require__(52)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\ModalComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0a46dff2", Component.options)
+  } else {
+    hotAPI.reload("data-v-0a46dff2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			loading: true,
+			body: ''
+		};
+	},
+	computed: {},
+	methods: {
+		init: function init() {
+			var self = this;
+			console.log('Modal component init', self);
+		}
+	},
+	mounted: function mounted() {
+		console.log('List Component mounted.');
+		this.init();
+	}
+});
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", {})
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0a46dff2", module.exports)
+  }
+}
+
+/***/ }),
 /* 53 */
 /***/ (function(module, exports) {
 
